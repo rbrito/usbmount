@@ -1,0 +1,3 @@
+usbmount usr/share/usbmount
+usbmount.dev etc/dev.d/block
+usbmount.conf etc
