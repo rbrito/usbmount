@@ -69,10 +69,11 @@ if test "$ACTION" = add; then
 	    # types to mount.
 	    if in_list "$fstype" "$FILESYSTEMS"; then
 		# Acquire lock.
-		log debug "trying to acquire lock"
+		log debug "trying to acquire lock /var/run/usbmount/.mount.lock"
 		lockfile-create --retry 3 /var/run/usbmount/.mount || \
 		    { log error "cannot acquire lock /var/run/usbmount/.mount.lock"; exit 1; }
 		trap '( lockfile-remove /var/run/usbmount/.mount )' 0
+		log debug "acquired lock /var/run/usbmount/.mount.lock"
 
 		# Search an available mountpoint.
 		for v in $MOUNTPOINTS; do
@@ -131,7 +132,6 @@ elif test "$ACTION" = remove; then
 
     # A block or partition device has been removed.
     # Test if it is mounted.
-    have_unmounted=no
     while read device mountpoint fstype remainder; do
 	if test "$DEVNAME" = "$device"; then
 	    # If the mountpoint and filesystem type are maintained by
@@ -140,31 +140,18 @@ elif test "$ACTION" = remove; then
 		&& in_list "$fstype" "$FILESYSTEMS"; then
 		log info "executing command: umount -l $mountpoint"
 		umount -l "$mountpoint"
-		have_unmounted=yes
+
+		# If a model symlink exists for this device, remove it.
+		ls /var/run/usbmount | while read model; do
+		    if test "`readlink /var/run/usbmount/$model || :`" = "$mountpoint"; then
+			log info "removing /var/run/usbmount/$model"
+			rm -f "/var/run/usbmount/$model"
+		    fi
+		done
 	    fi
 	    break
 	fi
     done < /proc/mounts
-
-    # If a device has been unmounted, clean /var/run/usbmount.
-    if test $have_unmounted = yes && test -d /var/run/usbmount; then
-	ls /var/run/usbmount | while read model; do
-	    mounted=no
-	    while read device mountpoint remainder; do
-		if test "`readlink $model`" = "$mountpoint"; then
-		    mounted=yes
-		    break
-		fi
-	    done < /proc/mounts
-
-	    # If a symlink pointes to a directory which is not mounted,
-	    # remove it.
-	    if test $mounted = no; then
-		log info "removing /var/run/usbmount/$model"
-		rm -f "/var/run/usbmount/$model"
-	    fi
-	done
-    fi
 
 fi
 

@@ -1,3 +1,16 @@
+usbmount (0.0.9) unstable; urgency=low
+
+  * Upload sponsored by Rafael Laboissiere.
+  * When a device is removed, make sure that only the corresponding model
+    symlink in /var/run/usbmount is removed (closes: #303376).
+  * Include directory /var/run/usbmount in package instead of creating it
+    in postinst (closes: #303434).
+  * Move creation of mount points in /media from 'postinst configure' to
+    'preinst install'. This ensures that the mount points are created if
+    the package is removed (but not purged) and then reinstalled.
+
+ -- Martin Dickopp <martin@zero-based.org>  Wed,  6 Apr 2005 23:54:53 +0200
+
 usbmount (0.0.8) unstable; urgency=low
 
   * Upload sponsored by Rafael Laboissiere (closes: #298526).
