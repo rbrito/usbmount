@@ -21,4 +21,4 @@ Description: automatically mount and unmount USB mass storage devices
  .
  The script that does the (un)mounting is called by the udev daemon.
  .
- Homepage: http://www.zero-based.org/debian/usbmount.html
+ Homepage: http://usbmount.alioth.debian.org/

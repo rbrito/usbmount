@@ -1,3 +1,23 @@
+usbmount (0.0.7) unstable; urgency=low
+
+  Rafael Laboissiere:
+
+  * First upload of this package to the official Debian distribution
+    (closes: #298526)
+  * NMU in the behalf of the upstream maintainer, which is also the
+    effective maintainer of the Debian package.
+
+  Martin Dickopp:
+
+  * Built as a Debian-native package again.
+  * Default configuration does not mount vfat filesystems any more.
+  * Put warning in configuration file that sync-mounting is not fully
+    implemented for vfat filesystem.
+  * Package description refers to new location of the homepage
+    (http://usbmount.alioth.debian.org/).
+
+ -- Martin Dickopp <martin@zero-based.org>  Wed,  9 Mar 2005 14:10:34 +0100
+
 usbmount (0.0.6-1) unstable; urgency=low
 
   * New upstream release:
@@ -15,10 +35,6 @@ usbmount (0.0.6-1) unstable; urgency=low
 
 usbmount (0.0.5-1) unstable; urgency=low
 
-  * First upload of this package to the official Debian distribution
-    (closes: #298526)
-  * NMU in the behalf of the upstream maintainer, which is also the
-    effective maintainer of the Debian package.
   * debian/control:
     - Added myself to Uploaders field
     - Start Description with lower-case letter
