@@ -1,0 +1,4 @@
+usbmount usr/share/usbmount
+debian/bug/* usr/share/bug/usbmount
+usbmount.dev etc/dev.d/block
+usbmount.conf etc

@@ -1,0 +1,50 @@
+usbmount (0.0.5-1) unstable; urgency=low
+
+  * First upload of this package to the official Debian distribution
+    (closes: #298526)
+  * NMU in the behalf of the upstream maintainer, which is also the
+    effective maintainer of the Debian package.
+  * debian/control:
+    - Added myself to Uploaders field
+    - Start Description with lower-case letter
+    - Added Homepage link
+
+ -- Rafael Laboissiere <rafael@debian.org>  Tue,  8 Mar 2005 13:48:00 +0100
+
+usbmount (0.0.5) unstable; urgency=low
+
+  * Create symlinks (model names) in /var/usbmount.
+
+ -- Martin Dickopp <martin-deb@zero-based.org>  Wed, 23 Feb 2005 18:11:03 +0100
+
+usbmount (0.0.4) unstable; urgency=low
+
+  * Adapt to changes in udev_volume_id; depend on udev (>= 0.053-1).
+  * Redirect standard output and standard error to /dev/null; log via
+    syslog.
+  * More verbose logging can be turned on with a configuration variable.
+
+ -- Martin Dickopp <martin-deb@zero-based.org>  Mon, 21 Feb 2005 11:32:55 +0100
+
+usbmount (0.0.3) unstable; urgency=low
+
+  * Create /media if it doesn't already exist.
+  * Include instructions for the reportbug program to send bug reports to
+    the maintainer instead of the Debian BTS.
+  * Move mounting and unmounting script to /usr/share/usbmount/usbmount.
+
+ -- Martin Dickopp <martin-deb@zero-based.org>  Mon,  8 Nov 2004 19:03:12 +0100
+
+usbmount (0.0.2) unstable; urgency=low
+
+  * Don't kill any processes before unmounting; unmount lazily (-l option
+    to the umount command). Thanks to Martin F. Krafft for the suggestion.
+  * Build-Depends on debhelper >= 4.1.0 (required when cdbs is used).
+
+ -- Martin Dickopp <martin-deb@zero-based.org>  Tue, 26 Oct 2004 23:04:04 +0200
+
+usbmount (0.0.1) unstable; urgency=low
+
+  * Initial package.
+
+ -- Martin Dickopp <martin-deb@zero-based.org>  Tue, 26 Oct 2004 17:32:54 +0200
