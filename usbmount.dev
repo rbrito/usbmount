@@ -1,0 +1,37 @@
+#!/bin/sh
+# This script mounts USB mass storage devices when they are plugged in
+# and unmounts them when they are removed.
+# Copyright (C) 2004 Martin Dickopp
+#
+# This file is free software; the copyright holder gives unlimited
+# permission to copy and/or distribute it, with or without
+# modifications, as long as this notice is preserved.
+#
+# This file is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY, to the extent permitted by law; without
+# even the implied warranty of MERCHANTABILITY or FITNESS FOR A
+# PARTICULAR PURPOSE.
+#
+set -e
+
+# Exit if the (un)mounting script is not executable.
+test -x /usr/share/usbmount/usbmount || exit 0
+
+# Default values for configuration variables.
+MOUNTPOINTS="/media/usb0 /media/usb1 /media/usb2 /media/usb3
+             /media/usb4 /media/usb5 /media/usb6 /media/usb7"
+FILESYSTEMS="msdos vfat"
+MOUNTOPTIONS="sync,noexec,nodev,noatime,gid=floppy,dmask=0007,fmask=0117"
+VERBOSE="no"
+
+# Read configuration file.
+if test -r /etc/usbmount.conf; then
+    . /etc/usbmount.conf
+fi
+
+# Execute (un)mounting script.
+export MOUNTPOINTS
+export FILESYSTEMS
+export MOUNTOPTIONS
+export VERBOSE
+exec /usr/share/usbmount/usbmount "$@"
