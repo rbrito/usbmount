@@ -45,6 +45,8 @@ test -x /sbin/udev_volume_id \
     || { log err "cannnot execute /sbin/udev_volume_id"; exit 1; }
 
 
+umask 022
+
 if test "$ACTION" = add; then
 
     # A block or partition device has been added.
@@ -85,7 +87,7 @@ if test "$ACTION" = add; then
 		    log info "executing command: mount -t $fstype $options $DEVNAME $mountpoint"
 		    mount -t "$fstype" $options "$DEVNAME" "$mountpoint"
 
-		    # Create a symlink in /var/usbmount if the device
+		    # Create a symlink in /var/run/usbmount if the device
 		    # has a model name.
 		    model=
 		    if test -r "/sys$DEVPATH/device/model"; then
@@ -94,9 +96,15 @@ if test "$ACTION" = add; then
 			model="`cat \"/sys$DEVPATH/../device/model\"`"
 		    fi
 		    model="`echo \"$model\" | sed 's/^[ 	]*//; s/[ 	]*$//; s/[ 	]/_/g; s/[^0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ._-]//g'`"
-		    if test "$model" != "" && ! test -r "/var/usbmount/$model"; then
-			log info "creating symlink /var/usbmount/$model -> $mountpoint"
-			ln -sf "$mountpoint" "/var/usbmount/$model"
+		    if test "$model" != ""; then
+			if ! test -d /var/run/usbmount; then
+			    log info "creating directory /var/run/usbmount"
+			    mkdir /var/run/usbmount
+			fi
+			if ! test -e "/var/run/usbmount/$model"; then
+			    log info "creating symlink /var/run/usbmount/$model -> $mountpoint"
+			    ln -sf "$mountpoint" "/var/run/usbmount/$model"
+			fi
 		    fi
 		else
 		    # No suitable mount point found.
@@ -126,9 +134,9 @@ elif test "$ACTION" = remove; then
 	fi
     done < /proc/mounts
 
-    # If a device has been unmounted, clean /var/usbmount.
-    if test $have_unmounted = yes; then
-	ls /var/usbmount | while read model; do
+    # If a device has been unmounted, clean /var/run/usbmount.
+    if test $have_unmounted = yes && test -d /var/run/usbmount; then
+	ls /var/run/usbmount | while read model; do
 	    mounted=no
 	    while read device mountpoint remainder; do
 		if test "`readlink $model`" = "$mountpoint"; then
@@ -140,8 +148,8 @@ elif test "$ACTION" = remove; then
 	    # If a symlink pointes to a directory which is not mounted,
 	    # remove it.
 	    if test $mounted = no; then
-		log info "removing /var/usbmount/$model"
-		rm -f "/var/usbmount/$model"
+		log info "removing /var/run/usbmount/$model"
+		rm -f "/var/run/usbmount/$model"
 	    fi
 	done
     fi

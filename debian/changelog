@@ -1,3 +1,18 @@
+usbmount (0.0.6-1) unstable; urgency=low
+
+  * New upstream release:
+    - Changed maintainer's email address from <martin-deb@zero-based.org>
+      to <martin@zero-based.org>.
+    - Create symlink in /var/run/usbmount instead of /var/usbmount. If the
+      directory /var/run/usbmount does not exist, it is created when a device
+      is plugged in.
+  * Updated package description to mention that symlinks in
+    /var/run/usbmount are created.
+  * Removed instructions for 'reportbug' to send bug reports to the upstream
+    maintainer instead of the Debian BTS.
+
+ -- Martin Dickopp <martin@zero-based.org>  Tue,  8 Mar 2005 17:19:05 +0100
+
 usbmount (0.0.5-1) unstable; urgency=low
 
   * First upload of this package to the official Debian distribution

@@ -10,9 +10,4 @@ if test "$1" = remove; then
     done
 fi
 
-# Remove any remaining symlinks in /var/usbmount.
-if test "$1" = remove; then
-    rm -f /var/usbmount/* 2> /dev/null || :
-fi
-
 exit 0
