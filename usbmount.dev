@@ -1,7 +1,7 @@
 #!/bin/sh
 # This script mounts USB mass storage devices when they are plugged in
 # and unmounts them when they are removed.
-# Copyright (C) 2004 Martin Dickopp
+# Copyright (C) 2004, 2005 Martin Dickopp
 #
 # This file is free software; the copyright holder gives unlimited
 # permission to copy and/or distribute it, with or without
@@ -21,6 +21,7 @@ test -x /usr/share/usbmount/usbmount || exit 0
 MOUNTPOINTS=""
 FILESYSTEMS=""
 MOUNTOPTIONS=""
+FS_MOUNTOPTIONS=""
 VERBOSE="no"
 
 # Read configuration file.
@@ -32,5 +33,6 @@ fi
 export MOUNTPOINTS
 export FILESYSTEMS
 export MOUNTOPTIONS
+export FS_MOUNTOPTIONS
 export VERBOSE
 exec /usr/share/usbmount/usbmount "$@"

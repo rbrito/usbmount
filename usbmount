@@ -68,6 +68,12 @@ if test "$ACTION" = add; then
 	    # Test if the filesystem type is in the list of filesystem
 	    # types to mount.
 	    if in_list "$fstype" "$FILESYSTEMS"; then
+		# Acquire lock.
+		log debug "trying to acquire lock"
+		lockfile-create --retry 3 /var/run/usbmount/.mount || \
+		    { log error "cannot acquire lock /var/run/usbmount/.mount.lock"; exit 1; }
+		trap '( lockfile-remove /var/run/usbmount/.mount )' 0
+
 		# Search an available mountpoint.
 		for v in $MOUNTPOINTS; do
 		    if test -d "$v" \
@@ -78,12 +84,22 @@ if test "$ACTION" = add; then
 		    fi
 		done
 		if test -n "$mountpoint"; then
-		    # Mount the filesystem.
+		    # Determine mount options.
+		    options=
+		    for v in $FS_MOUNTOPTIONS; do
+			if expr "$v" : "-fstype=$fstype,."; then
+			    options="`echo \"$v\" | sed 's/^[^,]*,//'`"
+			    break
+			fi
+		    done
 		    if test -n "$MOUNTOPTIONS"; then
-			options="-o $MOUNTOPTIONS"
-		    else
-			options=
+			options="$MOUNTOPTIONS${options:+,$options}"
 		    fi
+		    if test -n "$options"; then
+			options="-o $options"
+		    fi
+
+		    # Mount the filesystem.
 		    log info "executing command: mount -t $fstype $options $DEVNAME $mountpoint"
 		    mount -t "$fstype" $options "$DEVNAME" "$mountpoint"
 
@@ -97,10 +113,6 @@ if test "$ACTION" = add; then
 		    fi
 		    model="`echo \"$model\" | sed 's/^[ 	]*//; s/[ 	]*$//; s/[ 	]/_/g; s/[^0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ._-]//g'`"
 		    if test "$model" != ""; then
-			if ! test -d /var/run/usbmount; then
-			    log info "creating directory /var/run/usbmount"
-			    mkdir /var/run/usbmount
-			fi
 			if ! test -e "/var/run/usbmount/$model"; then
 			    log info "creating symlink /var/run/usbmount/$model -> $mountpoint"
 			    ln -sf "$mountpoint" "/var/run/usbmount/$model"

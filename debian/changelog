@@ -1,3 +1,15 @@
+usbmount (0.0.8) unstable; urgency=low
+
+  * Upload sponsored by Rafael Laboissiere (closes: #298526).
+  * Filesystem type specific mount options can be specified.
+  * Use locking to serialize concurrent mount attempts. This ensures that
+    different mount points are chosen if a device contains more than one
+    mountable partition.
+  * Make sure that /var/run/usbmount is removed on package removal.
+  * More detailed package description and README file.
+
+ -- Martin Dickopp <martin@zero-based.org>  Sun,  3 Apr 2005 23:40:25 +0200
+
 usbmount (0.0.7) unstable; urgency=low
 
   Rafael Laboissiere:
