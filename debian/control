@@ -20,5 +20,11 @@ Description: automatically mount and unmount USB mass storage devices
  created.
  .
  The script that does the (un)mounting is called by the udev daemon.
+ Therefore, USBmount requires a 2.6 (or newer) kernel.
+ .
+ USBmount is intended as a lightweight solution which is independent of
+ a desktop environment. Users which would like an icon to appear when an
+ USB device is plugged in should use the pmount and hal packages
+ instead.
  .
  Homepage: http://usbmount.alioth.debian.org/

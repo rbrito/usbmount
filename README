@@ -1,15 +1,21 @@
-usbmount
+USBmount
 --------
 
-The usbmount package automatically mounts USB mass storage devices
+The USBmount package automatically mounts USB mass storage devices
 (typically USB pens) when they are plugged in, and unmounts them when
 they are removed. The mountpoints (/media/usb[0-7] by default),
 filesystem types to consider, and mount options are configurable. When
 multiple devices are plugged in, the first available mountpoint is
-automatically selected.
+automatically selected. If the device provides a model name, a symbolic
+link /var/run/usbmount/MODELNAME pointing to the mountpoint is auto-
+matically created.
 
-If the device provides a model name, a symlink /var/run/usbmount/MODELNAME
-pointing to the mountpoint is automatically created.
+The script that does the (un)mounting is called by the udev daemon.
+Therefore, USBmount requires a 2.6 (or newer) kernel.
+
+USBmount is intended as a lightweight solution which is independent of a
+desktop environment. Users which would like an icon to appear when an
+USB device is plugged in should use the pmount and hal packages instead.
 
 The comments in the configuration file /etc/usbmount.conf describe how
 to configure the package.

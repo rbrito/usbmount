@@ -1,13 +1,17 @@
 #!/bin/sh
 set -e
 
-# If the package is removed, try to remove the default mountpoints.
-# Failure to do so is not considered fatal.
+# If the package is removed, try to remove the default mountpoints and
+# /var/run/usbmount. Failure to do so is not considered fatal.
 if test "$1" = remove; then
     rm -f /media/usb 2> /dev/null || :
     for i in 0 1 2 3 4 5 6 7; do
 	rmdir /media/usb$i 2> /dev/null || :
     done
+
+    rm -fr /var/run/usbmount 2> /dev/null || :
 fi
+
+#DEBHELPER#
 
 exit 0
