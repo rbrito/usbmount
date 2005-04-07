@@ -55,25 +55,26 @@ if test "$ACTION" = add; then
 	|| readlink "/sys$DEVPATH/../device" | grep -q /usb; then
 	log debug "$DEVNAME is a USB device"
 
+	# Acquire lock.
+	log debug "trying to acquire lock /var/run/usbmount/.mount.lock"
+	lockfile-create --retry 3 /var/run/usbmount/.mount || \
+	    { log err "cannot acquire lock /var/run/usbmount/.mount.lock"; exit 1; }
+	trap '( lockfile-remove /var/run/usbmount/.mount )' 0
+	log debug "acquired lock /var/run/usbmount/.mount.lock"
+
 	# Test if the device contains a filesystem.  If it doesn't, no
 	# further action is required, but calling udev_volume_id has the
 	# side effect that the partition table is read and partition
 	# devices are created.
 	if /sbin/udev_volume_id "$DEVNAME" | egrep -q '^F:(filesystem|disklabel)$'; then
-	    log debug "$DEVNAME containes a filesystem or disklabel"
+	    log debug "$DEVNAME contains a filesystem or disklabel"
 
 	    fstype="`/sbin/udev_volume_id -t \"$DEVNAME\"`"
-	    log debug "$DEVNAME containes filesystem type $fstype"
+	    log debug "$DEVNAME contains filesystem type $fstype"
 
 	    # Test if the filesystem type is in the list of filesystem
 	    # types to mount.
 	    if in_list "$fstype" "$FILESYSTEMS"; then
-		# Acquire lock.
-		log debug "trying to acquire lock /var/run/usbmount/.mount.lock"
-		lockfile-create --retry 3 /var/run/usbmount/.mount || \
-		    { log error "cannot acquire lock /var/run/usbmount/.mount.lock"; exit 1; }
-		trap '( lockfile-remove /var/run/usbmount/.mount )' 0
-		log debug "acquired lock /var/run/usbmount/.mount.lock"
 
 		# Search an available mountpoint.
 		for v in $MOUNTPOINTS; do
@@ -112,8 +113,13 @@ if test "$ACTION" = add; then
 		    elif test -r "/sys$DEVPATH/../device/model"; then
 			model="`cat \"/sys$DEVPATH/../device/model\"`"
 		    fi
-		    model="`echo \"$model\" | sed 's/^[ 	]*//; s/[ 	]*$//; s/[ 	]/_/g; s/[^0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ._-]//g'`"
-		    if test "$model" != ""; then
+		    model="`echo \"$model\" | sed 's/^[ 	]*//; s/[ 	]*$//; s/[ 	]/_/g; s/[^0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ._-]//g; s/^\.*//'`"
+		    if test -n "$model" && test -r "/sys$DEVPATH/../device/model"; then
+			# Append partition number to model name.
+			partnumber="`echo \"$DEVNAME\" | sed 's/^.*[^0123456789]\([0123456789]*\)$/\1/'`"
+			model="$model${partnumber:+_$partnumber}"
+		    fi
+		    if test -n "$model"; then
 			if ! test -e "/var/run/usbmount/$model"; then
 			    log info "creating symlink /var/run/usbmount/$model -> $mountpoint"
 			    ln -sf "$mountpoint" "/var/run/usbmount/$model"
