@@ -25,8 +25,8 @@ FS_MOUNTOPTIONS=""
 VERBOSE="no"
 
 # Read configuration file.
-if test -r /etc/usbmount.conf; then
-    . /etc/usbmount.conf
+if test -r /etc/usbmount/usbmount.conf; then
+    . /etc/usbmount/usbmount.conf
 fi
 
 # Execute (un)mounting script.

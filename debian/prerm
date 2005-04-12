@@ -1,16 +1,8 @@
 #!/bin/sh
 set -e
 
-# Actions to perform if the package is removed.
+# Remove contents of /var/run/usbmount before the package is removed.
 if test "$1" = remove; then
-    # Try to remove the default mountpoints.  Failure to do so is not
-    # considered fatal.
-    rm -f /media/usb 2> /dev/null || :
-    for i in 0 1 2 3 4 5 6 7; do
-	rmdir /media/usb$i 2> /dev/null || :
-    done
-
-    # Remove contents of /var/run/usbmount.
     rm -f /var/run/usbmount/*
 fi
 

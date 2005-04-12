@@ -97,40 +97,44 @@ if test "$ACTION" = add; then
 		    if test -n "$MOUNTOPTIONS"; then
 			options="$MOUNTOPTIONS${options:+,$options}"
 		    fi
-		    if test -n "$options"; then
-			options="-o $options"
-		    fi
 
 		    # Mount the filesystem.
-		    log info "executing command: mount -t $fstype $options $DEVNAME $mountpoint"
-		    mount -t "$fstype" $options "$DEVNAME" "$mountpoint"
+		    log info "executing command: mount -t$fstype ${options:+-o$options} $DEVNAME $mountpoint"
+		    mount "-t$fstype" "${options:+-o$options}" "$DEVNAME" "$mountpoint"
 
-		    # Create a symlink in /var/run/usbmount if the device
-		    # has a model name.
+		    # Determine vendor and model.
+		    vendor=
+		    if test -r "/sys$DEVPATH/device/vendor"; then
+			vendor="`cat \"/sys$DEVPATH/device/vendor\"`"
+		    elif test -r "/sys$DEVPATH/../device/vendor"; then
+			vendor="`cat \"/sys$DEVPATH/../device/vendor\"`"
+		    fi
+		    vendor="`echo \"$vendor\" | sed 's/^ *//; s/ *$//'`"
 		    model=
 		    if test -r "/sys$DEVPATH/device/model"; then
 			model="`cat \"/sys$DEVPATH/device/model\"`"
 		    elif test -r "/sys$DEVPATH/../device/model"; then
 			model="`cat \"/sys$DEVPATH/../device/model\"`"
 		    fi
-		    model="`echo \"$model\" | sed 's/^[ 	]*//; s/[ 	]*$//; s/[ 	]/_/g; s/[^0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ._-]//g; s/^\.*//'`"
-		    if test -n "$model" && test -r "/sys$DEVPATH/../device/model"; then
-			# Append partition number to model name.
-			partnumber="`echo \"$DEVNAME\" | sed 's/^.*[^0123456789]\([0123456789]*\)$/\1/'`"
-			model="$model${partnumber:+_$partnumber}"
-		    fi
-		    if test -n "$model"; then
-			if ! test -e "/var/run/usbmount/$model"; then
-			    log info "creating symlink /var/run/usbmount/$model -> $mountpoint"
-			    ln -sf "$mountpoint" "/var/run/usbmount/$model"
-			fi
-		    fi
+		    model="`echo \"$model\" | sed 's/^ *//; s/ *$//'`"
+
+		    # Run hook scripts; ignore errors.
+		    export UM_DEVICE="$DEVNAME"
+		    export UM_MOUNTPOINT="$mountpoint"
+		    export UM_FILESYSTEM="$fstype"
+		    export UM_MOUNTOPTIONS="$options"
+		    export UM_VENDOR="$vendor"
+		    export UM_MODEL="$model"
+		    log info "executing command: run-parts /etc/usbmount/mount.d"
+		    run-parts /etc/usbmount/mount.d || :
 		else
 		    # No suitable mount point found.
 		    log warning "no mountpoint found for $DEVNAME"
 		    exit 1
 		fi
 	    fi
+	else
+	    log debug "$DEVNAME does not contain a filesystem or disklabel"
 	fi
     fi
 
@@ -147,13 +151,12 @@ elif test "$ACTION" = remove; then
 		log info "executing command: umount -l $mountpoint"
 		umount -l "$mountpoint"
 
-		# If a model symlink exists for this device, remove it.
-		ls /var/run/usbmount | while read model; do
-		    if test "`readlink /var/run/usbmount/$model || :`" = "$mountpoint"; then
-			log info "removing /var/run/usbmount/$model"
-			rm -f "/var/run/usbmount/$model"
-		    fi
-		done
+		# Run hook scripts; ignore errors.
+		export UM_DEVICE="$DEVNAME"
+		export UM_MOUNTPOINT="$mountpoint"
+		export UM_FILESYSTEM="$fstype"
+		log info "executing command: run-parts /etc/usbmount/umount.d"
+		run-parts /etc/usbmount/umount.d || :
 	    fi
 	    break
 	fi
