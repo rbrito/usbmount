@@ -62,6 +62,25 @@ if test "$ACTION" = add; then
 	trap '( lockfile-remove /var/run/usbmount/.mount )' 0
 	log debug "acquired lock /var/run/usbmount/.mount.lock"
 
+	# Try to read from the device.  Some devices need a few seconds
+	# initialization time before they can be accessed.  Give up after
+	# 20 seconds.  Thanks to Peter Stelmachovic for his help with
+	# debugging this.
+	log debug "testing whether $DEVNAME is readable"
+	read_success=no
+	for t in 0 1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 17 18 19; do
+	    if dd if="$DEVNAME" of=/dev/null bs=512 count=1; then
+		read_success=yes
+		break
+	    fi
+	    log debug "attempt $t to read from $DEVNAME failed"
+	    sleep 1
+	done
+	if test "$read_success" != yes; then
+	    log err "cannot read from $DEVNAME"
+	    exit 1
+	fi
+
 	# Test if the device contains a filesystem.  If it doesn't, no
 	# further action is required, but calling udev_volume_id has the
 	# side effect that the partition table is read and partition
