@@ -1,3 +1,13 @@
+usbmount (0.0.11) unstable; urgency=low
+
+  * Upload sponsored by Rafael Laboissiere.
+  * If a device is not readable, wait up to 20 seconds for it to become
+    so (closes: #305672). Some devices apparently need a few seconds
+    initialization time before they can be accessed. Thanks to Peter
+    Stelmachovic for his help with debugging this issue.
+
+ -- Martin Dickopp <martin@zero-based.org>  Mon,  2 May 2005 14:19:15 +0200
+
 usbmount (0.0.10) unstable; urgency=low
 
   * Upload sponsored by Rafael Laboissiere.
