@@ -4,7 +4,7 @@ Priority: extra
 Maintainer: Martin Dickopp <martin@zero-based.org>
 Uploaders: Rafael Laboissiere <rafael@debian.org>
 Build-Depends-Indep: cdbs, debhelper (>= 4.1.0)
-Standards-Version: 3.6.1
+Standards-Version: 3.6.2
 
 Package: usbmount
 Architecture: all

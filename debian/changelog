@@ -1,3 +1,10 @@
+usbmount (0.0.12) unstable; urgency=low
+
+  * debian/control: update 'Standards-Version' to 3.6.2. No changes to the
+    package necessary.
+
+ --
+
 usbmount (0.0.11) unstable; urgency=low
 
   * Upload sponsored by Rafael Laboissiere.
