@@ -127,6 +127,10 @@ if test "$ACTION" = add; then
 			vendor="`cat \"/sys$DEVPATH/device/vendor\"`"
 		    elif test -r "/sys$DEVPATH/../device/vendor"; then
 			vendor="`cat \"/sys$DEVPATH/../device/vendor\"`"
+		    elif test -r "/sys$DEVPATH/device/../manufacturer"; then
+			vendor="`cat \"/sys$DEVPATH/device/../manufacturer\"`"
+		    elif test -r "/sys$DEVPATH/../device/../manufacturer"; then
+			vendor="`cat \"/sys$DEVPATH/../device/../manufacturer\"`"
 		    fi
 		    vendor="`echo \"$vendor\" | sed 's/^ *//; s/ *$//'`"
 		    model=
@@ -134,6 +138,10 @@ if test "$ACTION" = add; then
 			model="`cat \"/sys$DEVPATH/device/model\"`"
 		    elif test -r "/sys$DEVPATH/../device/model"; then
 			model="`cat \"/sys$DEVPATH/../device/model\"`"
+		    elif test -r "/sys$DEVPATH/device/../product"; then
+			model="`cat \"/sys$DEVPATH/device/../product\"`"
+		    elif test -r "/sys$DEVPATH/../device/../product"; then
+			model="`cat \"/sys$DEVPATH/../device/../product\"`"
 		    fi
 		    model="`echo \"$model\" | sed 's/^ *//; s/ *$//'`"
 
