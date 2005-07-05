@@ -8,7 +8,7 @@ Standards-Version: 3.6.2
 
 Package: usbmount
 Architecture: all
-Depends: udev (>= 0.053-1), lockfile-progs
+Depends: udev (>= 0.060-1), lockfile-progs
 Description: automatically mount and unmount USB mass storage devices
  This package automatically mounts USB mass storage devices (typically
  USB pens) when they are plugged in, and unmounts them when they are

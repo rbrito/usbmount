@@ -40,9 +40,8 @@ test -n "$MOUNTPOINTS" || { log err "MOUNTPOINTS not set"; exit 1; }
 test -n "$FILESYSTEMS" || { log err "FILESYSTEMS not set"; exit 1; }
 test -n "$MOUNTOPTIONS" || { log err "MOUNTOPTIONS not set"; exit 1; }
 
-# Test if /sbin/udev_volume_id is executable.
-test -x /sbin/udev_volume_id \
-    || { log err "cannnot execute /sbin/udev_volume_id"; exit 1; }
+# Test if /sbin/vol_id is executable.
+test -x /sbin/vol_id || { log err "cannnot execute /sbin/vol_id"; exit 1; }
 
 
 umask 022
@@ -82,13 +81,12 @@ if test "$ACTION" = add; then
 	fi
 
 	# Test if the device contains a filesystem.  If it doesn't, no
-	# further action is required, but calling udev_volume_id has the
-	# side effect that the partition table is read and partition
-	# devices are created.
-	if /sbin/udev_volume_id "$DEVNAME" | egrep -q '^F:(filesystem|disklabel)$'; then
+	# further action is required, but calling vol_id has the side effect
+	# that the partition table is read and partition devices are created.
+	if /sbin/vol_id "$DEVNAME" | egrep -q '^ID_FS_USAGE=(filesystem|disklabel)$'; then
 	    log debug "$DEVNAME contains a filesystem or disklabel"
 
-	    fstype="`/sbin/udev_volume_id -t \"$DEVNAME\"`"
+	    fstype="`/sbin/vol_id -t \"$DEVNAME\"`"
 	    log debug "$DEVNAME contains filesystem type $fstype"
 
 	    # Test if the filesystem type is in the list of filesystem

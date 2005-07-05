@@ -1,3 +1,12 @@
+usbmount (0.0.13) unstable; urgency=medium
+
+  * Adapt to udev changes: 'udev_volume_id' has been renamed to
+    'vol_id' and its output has changed (closes: #317022). Depend on
+    udev (>= 0.060-1). Without this change, usbmount doesn't work at
+    all with udev 0.060, therefore urgency=medium.
+
+ --
+
 usbmount (0.0.12) unstable; urgency=low
 
   * Upload sponsored by Rafael Laboissiere.
