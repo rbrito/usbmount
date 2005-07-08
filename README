@@ -21,6 +21,24 @@ The comments in the configuration file /etc/usbmount/usbmount.conf
 describe how to configure the package.
 
 
+Vfat Filesystems
+----------------
+
+Filesystems of type vfat are not considered by default, despite being
+popular for many USB devices, because the Linux kernel does not yet
+fully implement sync-mounting for this filesystem type. This means that
+you risk losing data or even corrupting the filesystem if you remove the
+medium before all data has been written to it. If you include vfat in
+the FILESYSTEMS configuration variable, you *MUST* run the 'sync'
+command before removing the device.
+
+A useful configuration for vfat filesystems is to include a string like
+-fstype=vfat,gid=floppy,dmask=0007,fmask=0117 in the FS_MOUNTOPTIONS
+variable. These mount options have the effect that members of the floppy
+group can read from and write to the medium, but nobody else can access
+it.
+
+
 Hook Scripts
 ------------
 

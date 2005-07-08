@@ -4,6 +4,8 @@ usbmount (0.0.13) unstable; urgency=medium
     'vol_id' and its output has changed (closes: #317022). Depend on
     udev (>= 0.060-1). Without this change, usbmount doesn't work at
     all with udev 0.060, therefore urgency=medium.
+  * New section about the vfat filesystem type added to the README file
+    (closes: #316758).
 
  --
 
