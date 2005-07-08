@@ -23,6 +23,21 @@ if test "$1" = install; then
     ln -s usb0 /media/usb 2> /dev/null || :
 fi
 
+# If the package is freshly installed or upgraded from a version before
+# 0.0.13, create a "flag file" to indicate that a symlink in
+# /etc/udev/rules.d must be created.
+if test "$1" = upgrade || test "$1" = install; then
+    if test -z "$2" || dpkg --compare-versions "$2" lt 0.0.13; then
+	test -d /etc/usbmount || mkdir /etc/usbmount
+	cat > /etc/usbmount/.create_rules_symlink <<EOF
+The presence of this file means that when the usbmount package is
+configered, a symbolic link /etc/udev/rules.d/z60_usbmount.rules
+pointing to /etc/udev/usbmount.rules is created. If you do not want
+this to happen, remove this file.
+EOF
+    fi
+fi
+
 #DEBHELPER#
 
 exit 0

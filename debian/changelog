@@ -1,13 +1,18 @@
 usbmount (0.0.13) unstable; urgency=medium
 
+  * Upload sponsored by Rafael Laboissiere.
   * Adapt to udev changes: 'udev_volume_id' has been renamed to
     'vol_id' and its output has changed (closes: #317022). Depend on
     udev (>= 0.060-1). Without this change, usbmount doesn't work at
     all with udev 0.060, therefore urgency=medium.
   * New section about the vfat filesystem type added to the README file
     (closes: #316758).
+  * /etc/dev.d is obsolete. Remove /etc/dev.d/block/usbmount.dev; the
+    usbmount script is now called by the new file /etc/udev/usbmount.rules.
+    Create symlink /etc/udev/rules.d/z60_usbmount.rules to this file if
+    usbmount is freshly installed or updated from a version before 0.0.13.
 
- --
+ -- Martin Dickopp <martin@zero-based.org>  Fri,  8 Jul 2005 19:22:10 +0200
 
 usbmount (0.0.12) unstable; urgency=low
 
