@@ -38,10 +38,15 @@ if test "$1" = abort-upgrade || test "$1" = abort-install; then
     fi
 fi
 
-# If the package is purged, remove /etc/udev/rules.d/z60_usbmount.rules
-# symlink if it exists.
-if test "$1" = purge && test -h /etc/udev/rules.d/z60_usbmount.rules; then
-    rm -f /etc/udev/rules.d/z60_usbmount.rules
+# If the package is purged, remove /etc/dev.d/block/usbmount.dev and the
+# /etc/udev/rules.d/z60_usbmount.rules symlink if they exist.
+if test "$1" = purge; then
+    if test -h /etc/udev/rules.d/z60_usbmount.rules; then
+	rm -f /etc/udev/rules.d/z60_usbmount.rules
+    fi
+    if test -f /etc/dev.d/block/usbmount.dev; then
+	rm -f /etc/dev.d/block/usbmount.dev
+    fi
 fi
 
 #DEBHELPER#

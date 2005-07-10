@@ -1,3 +1,11 @@
+usbmount (0.0.14) unstable; urgency=low
+
+  * Upload sponsored by Rafael Laboissiere.
+  * Make sure that /etc/dev.d/block/usbmount.dev is removed when the
+    package is purged.
+
+ -- Martin Dickopp <martin@zero-based.org>  Sun, 10 Jul 2005 22:17:00 +0200
+
 usbmount (0.0.13) unstable; urgency=medium
 
   * Upload sponsored by Rafael Laboissiere.
