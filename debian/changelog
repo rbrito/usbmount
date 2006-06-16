@@ -1,3 +1,15 @@
+usbmount (0.0.14.1) unstable; urgency=low
+
+  NOT YET RELEASED!
+
+  [Rafael Laboissiere]
+  * debian/control:
+    - Bumped Standards-Version to 3.7.2 (no changes needed)
+    - Moved debhelper and cdbs from Build-Depends-Indep to Build-Depends,
+      complying with section 7.6 of the Debian Policy.
+
+ --
+
 usbmount (0.0.14) unstable; urgency=low
 
   * Upload sponsored by Rafael Laboissiere.
