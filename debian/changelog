@@ -1,14 +1,26 @@
 usbmount (0.0.14.1) unstable; urgency=low
 
-  NOT YET RELEASED!
-
   [Rafael Laboissiere]
   * debian/control:
     - Bumped Standards-Version to 3.7.2 (no changes needed)
     - Moved debhelper and cdbs from Build-Depends-Indep to Build-Depends,
       complying with section 7.6 of the Debian Policy.
+  [Martin Dickopp]
+  * Acknowledge NMU (closes: #361351, #365225).
+  * Orphaning package, setting maintainer to Debian QA Group.
 
- --
+ -- Martin Dickopp <martin@zero-based.org>  Sat, 27 Jan 2007 12:42:44 +0100
+
+usbmount (0.0.14-0.1) unstable; urgency=low
+
+  * Non-Maintainer Upload
+  * Change path of vol_id of udev to the new location in /lib/udev. Thanks to
+    Eric Evans for the patch (Closes: #361351)
+    - Minimum udev dependency now 0.084-2, first version to ship vol_id in
+      that location
+  * Fix udev rule syntax, patch by Eric Evans (Closes: #365225)
+
+ -- Jeroen van Wolffelaar <jeroen@wolffelaar.nl>  Sun, 30 Apr 2006 23:45:57 +0000
 
 usbmount (0.0.14) unstable; urgency=low
 

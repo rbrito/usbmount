@@ -36,8 +36,8 @@ in_list()
 }
 
 
-# Test if /sbin/vol_id is executable.
-test -x /sbin/vol_id || { log err "cannnot execute /sbin/vol_id"; exit 1; }
+# Test if /lib/udev/vol_id is executable.
+test -x /lib/udev/vol_id || { log err "cannnot execute /lib/udev/vol_id"; exit 1; }
 
 # Default values for configuration variables.
 MOUNTPOINTS=""
@@ -85,10 +85,10 @@ if test "$1" = add; then
     # Test if the device contains a filesystem.  If it doesn't, no
     # further action is required, but calling vol_id has the side effect
     # that the partition table is read and partition devices are created.
-    if /sbin/vol_id "$DEVNAME" | egrep -q '^ID_FS_USAGE=(filesystem|disklabel)$'; then
+    if /lib/udev/vol_id "$DEVNAME" | egrep -q '^ID_FS_USAGE=(filesystem|disklabel)$'; then
 	log debug "$DEVNAME contains a filesystem or disklabel"
 
-	fstype="`/sbin/vol_id -t \"$DEVNAME\"`"
+	fstype="`/lib/udev/vol_id -t \"$DEVNAME\"`"
 	log debug "$DEVNAME contains filesystem type $fstype"
 
 	# Test if the filesystem type is in the list of filesystem
