@@ -1,9 +1,12 @@
 Source: usbmount
 Section: admin
 Priority: extra
-Maintainer: Debian QA Group <packages@qa.debian.org>
+Maintainer: Armin Berres <trigger+debian@space-based.de>
+Uploaders: Alexander Schnehl <tolimar@debian.org>
 Build-Depends: cdbs, debhelper (>= 4.1.0)
 Standards-Version: 3.7.2
+XS-Vcs-Svn: svn://svn.debian.org/svn/usbmount/trunk/usbmount
+XS-Vcs-Browser: http://svn.debian.org/wsvn/usbmount
 
 Package: usbmount
 Architecture: all
@@ -26,4 +29,4 @@ Description: automatically mount and unmount USB mass storage devices
  USB device is plugged in should use the pmount and hal packages
  instead.
  .
- Homepage: http://usbmount.alioth.debian.org/
+  Homepage: http://usbmount.alioth.debian.org/

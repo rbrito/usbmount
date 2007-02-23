@@ -51,6 +51,8 @@ if test -r /etc/usbmount/usbmount.conf; then
     . /etc/usbmount/usbmount.conf
 fi
 
+# Recreate /var/run/usbmount/ if it has been deleted
+test -e /var/run/usbmount/ || mkdir /var/run/usbmount/
 
 umask 022
 

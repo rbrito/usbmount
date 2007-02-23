@@ -1,3 +1,12 @@
+usbmount (0.0.15) unstable; urgency=low
+
+  * New Maintainer (Closes: #408621)
+  * Added XS-Vcs-Svn and XS-Vcs-Browser entries
+  * Ident homepage with two spaces
+  * recreate /var/run/usbmount if it has been deleted (Closes: #345364)
+
+ -- Armin Berres <trigger+debian@space-based.de>  Fri, 23 Feb 2007 16:21:58 +0100
+
 usbmount (0.0.14.1) unstable; urgency=low
 
   [Rafael Laboissiere]
