@@ -40,6 +40,7 @@ in_list()
 test -x /lib/udev/vol_id || { log err "cannnot execute /lib/udev/vol_id"; exit 1; }
 
 # Default values for configuration variables.
+ENABLED=1
 MOUNTPOINTS=""
 FILESYSTEMS=""
 MOUNTOPTIONS=""
@@ -49,6 +50,11 @@ VERBOSE="no"
 # Read configuration file.
 if test -r /etc/usbmount/usbmount.conf; then
     . /etc/usbmount/usbmount.conf
+fi
+
+if [ "$ENABLED" = "0" ]; then
+    log info "usbmount is disabled, see /etc/usbmount/usbmount.conf"
+    exit 0
 fi
 
 # Recreate /var/run/usbmount/ if it has been deleted
