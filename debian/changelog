@@ -1,12 +1,24 @@
+usbmount (0.0.15.1) unstable; urgency=low
+
+  * debian/control: actually include the DM-Upload-Allowed field.
+  * debian/compat: upgraded it to 5, since even stable has it.
+  * debian/control: updated build-dependency on debhelper >= 5.
+  * debian/control: eliminated the versioned dependency on udev,
+    since stable has it for a long time.
+
+ -- Rogério Brito <rbrito@ime.usp.br>  Tue, 30 Sep 2008 11:04:19 -0300
+
 usbmount (0.0.15) unstable; urgency=low
 
-  * New Maintainer, thanks to Martin Dickopp for all his work (Closes: #408621)
-  * Added XS-Vcs-Svn and XS-Vcs-Browser entries
-  * Ident homepage with two spaces
-  * Recreate /var/run/usbmount if it has been deleted (Closes: #345364)
-  * Add Option to disable usbmount (Closes: #380809)
+  * New maintainer (Closes: #408621).
+  * debian/control: updated with my e-mail address.
+  * debian/control: add Homepage field. (removed lintian warning)
+  * debian/control: included DM-Upload-Allowed field. I am a DM now.
+  * debian/control: upgraded Standards-Version to 3.8.0. (lintian warning).
+  * debian/copyright: made machine-parseable format. (removed lintian warning)
+  * More changes to come...
 
- -- Armin Berres <trigger+debian@space-based.de>  Fri, 23 Feb 2007 17:12:29 +0100
+ -- Rogério Brito <rbrito@ime.usp.br>  Fri, 26 Sep 2008 15:58:33 -0300
 
 usbmount (0.0.14.1) unstable; urgency=low
 

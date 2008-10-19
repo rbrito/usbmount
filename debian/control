@@ -1,16 +1,15 @@
 Source: usbmount
 Section: admin
 Priority: extra
-Maintainer: Armin Berres <trigger+debian@space-based.de>
-Uploaders: Alexander Schnehl <tolimar@debian.org>
-Build-Depends: cdbs, debhelper (>= 4.1.0)
-Standards-Version: 3.7.2
-XS-Vcs-Svn: svn://svn.debian.org/svn/usbmount/trunk/usbmount
-XS-Vcs-Browser: http://svn.debian.org/wsvn/usbmount
+Maintainer: Rogério Brito <rbrito@ime.usp.br>
+Build-Depends: cdbs, debhelper (>= 5)
+DM-Upload-Allowed: yes
+Standards-Version: 3.8.0
+Homepage: http://usbmount.alioth.debian.org/
 
 Package: usbmount
 Architecture: all
-Depends: udev (>= 0.084-2), lockfile-progs
+Depends: udev, lockfile-progs
 Description: automatically mount and unmount USB mass storage devices
  This package automatically mounts USB mass storage devices (typically
  USB pens) when they are plugged in, and unmounts them when they are
@@ -28,5 +27,3 @@ Description: automatically mount and unmount USB mass storage devices
  a desktop environment. Users which would like an icon to appear when an
  USB device is plugged in should use the pmount and hal packages
  instead.
- .
-  Homepage: http://usbmount.alioth.debian.org/

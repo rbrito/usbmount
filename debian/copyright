@@ -1,8 +1,37 @@
-This package was written and debianized by Martin Dickopp
-<martin@zero-based.org> on Tue, 26 Oct 2004 17:02:18 +0200.
+Format-Specification: http://wiki.debian.org/Proposals/CopyrightFormat?action=recall&rev=196
+Author: Martin Dickopp <martin@zero-based.org>
+Upstream-Name: usbmount
+Upstream-Maintainer: Rogério Brito <rbrito@ime.usp.br>
+Upstream-Source: http://usbmount.alioth.debian.org/
+Download: svn://svn.debian.org/svn/usbmount/trunk/usbmount
 
-Copyright:
+Files: *
+Copyright: © 2004, 2005, 2006, 2007 Martin Dickopp <martin@zero-based.org>
+License: BSD-2
+  This package is free software; the copyright holder gives unlimited
+  permission to copy and/or distribute it, with or without
+  modifications, as long as this notice is preserved.
 
+  This package is distributed in the hope that it will be useful,
+  but WITHOUT ANY WARRANTY, to the extent permitted by law; without
+  even the implied warranty of MERCHANTABILITY or FITNESS FOR A
+  PARTICULAR PURPOSE.
+
+Files: debian/*
+Copyright: © 2004, 2005, 2006, 2007 Martin Dickopp <martin@zero-based.org>
+License: BSD-2
+  This package is free software; the copyright holder gives unlimited
+  permission to copy and/or distribute it, with or without
+  modifications, as long as this notice is preserved.
+
+  This package is distributed in the hope that it will be useful,
+  but WITHOUT ANY WARRANTY, to the extent permitted by law; without
+  even the implied warranty of MERCHANTABILITY or FITNESS FOR A
+  PARTICULAR PURPOSE.
+
+Files: debian/*
+Copyright: © 2008 Rogério Brito <rbrito@ime.usp.br>
+License: BSD-2
   This package is free software; the copyright holder gives unlimited
   permission to copy and/or distribute it, with or without
   modifications, as long as this notice is preserved.
