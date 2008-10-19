@@ -1,0 +1,23 @@
+#!/bin/sh
+# This script removes the model name symlink in /var/run/usbmount.
+# Copyright (C) 2005 Martin Dickopp
+#
+# This file is free software; the copyright holder gives unlimited
+# permission to copy and/or distribute it, with or without
+# modifications, as long as this notice is preserved.
+#
+# This file is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY, to the extent permitted by law; without
+# even the implied warranty of MERCHANTABILITY or FITNESS FOR A
+# PARTICULAR PURPOSE.
+#
+set -e
+
+ls /var/run/usbmount | while read name; do
+    if test "`readlink \"/var/run/usbmount/$name\" || :`" = "$UM_MOUNTPOINT"; then
+	rm -f "/var/run/usbmount/$name"
+	break
+    fi
+done
+
+exit 0

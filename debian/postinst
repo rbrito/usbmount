@@ -1,0 +1,17 @@
+#!/bin/sh
+set -e
+
+# If /etc/usbmount/.create_rules_symlink exists when the package is
+# configured, create /etc/udev/rules.d/z60_usbmount.rules ->
+# ../usbmount.rules symlink unless /etc/udev/rules.d/z60_usbmount.rules
+# already exists.
+if test "$1" = configure && test -f /etc/usbmount/.create_rules_symlink; then
+    if ! test -e /etc/udev/rules.d/z60_usbmount.rules; then
+	ln -s ../usbmount.rules /etc/udev/rules.d/z60_usbmount.rules
+    fi
+    rm -f /etc/usbmount/.create_rules_symlink
+fi
+
+#DEBHELPER#
+
+exit 0

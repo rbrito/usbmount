@@ -1,0 +1,11 @@
+#!/bin/sh
+set -e
+
+# Remove contents of /var/run/usbmount before the package is removed.
+if test "$1" = remove; then
+    rm -f /var/run/usbmount/*
+fi
+
+#DEBHELPER#
+
+exit 0

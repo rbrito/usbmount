@@ -1,0 +1,6 @@
+# Rules for USBmount
+
+KERNEL=="sd*", BUS=="usb", ACTION=="add",    RUN+="/usr/share/usbmount/usbmount add"
+KERNEL=="ub*", BUS=="usb", ACTION=="add",    RUN+="/usr/share/usbmount/usbmount add"
+KERNEL=="sd*",             ACTION=="remove", RUN+="/usr/share/usbmount/usbmount remove"
+KERNEL=="ub*",             ACTION=="remove", RUN+="/usr/share/usbmount/usbmount remove"

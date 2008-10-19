@@ -1,0 +1,67 @@
+USBmount
+========
+
+The USBmount package automatically mounts USB mass storage devices
+(typically USB pens) when they are plugged in, and unmounts them when
+they are removed. The mountpoints (/media/usb[0-7] by default),
+filesystem types to consider, and mount options are configurable. When
+multiple devices are plugged in, the first available mountpoint is
+automatically selected. If the device provides a model name, a symbolic
+link /var/run/usbmount/MODELNAME pointing to the mountpoint is auto-
+matically created.
+
+The script that does the (un)mounting is called by the udev daemon.
+Therefore, USBmount requires a 2.6 (or newer) kernel.
+
+USBmount is intended as a lightweight solution which is independent of a
+desktop environment. Users which would like an icon to appear when an
+USB device is plugged in should use the pmount and hal packages instead.
+
+The comments in the configuration file /etc/usbmount/usbmount.conf
+describe how to configure the package.
+
+
+Vfat Filesystems
+----------------
+
+Filesystems of type vfat are not considered by default, despite being
+popular for many USB devices, because the Linux kernel does not yet
+fully implement sync-mounting for this filesystem type. This means that
+you risk losing data or even corrupting the filesystem if you remove the
+medium before all data has been written to it. If you include vfat in
+the FILESYSTEMS configuration variable, you *MUST* run the 'sync'
+command before removing the device.
+
+A useful configuration for vfat filesystems is to include a string like
+-fstype=vfat,gid=floppy,dmask=0007,fmask=0117 in the FS_MOUNTOPTIONS
+variable. These mount options have the effect that members of the floppy
+group can read from and write to the medium, but nobody else can access
+it.
+
+
+Hook Scripts
+------------
+
+After a device or partition has been mounted, the command 'run-parts
+/etc/usbmount/mount.d' is executed. This runs all scripts in
+/etc/usbmount/mount.d which adhere to a certain naming convention; see
+the run-parts manual page for details.
+
+The following environment variables are available to the scripts (in
+addition to those set in /etc/usbmount/usbmount.conf and by the hotplug
+and udev systems):
+
+UM_DEVICE       - filename of the device node
+UM_MOUNTPOINT   - mointpoint
+UM_FILESYSTEM   - filesystem type
+UM_MOUNTOPTIONS - mount options that have been passed to the mount command
+UM_VENDOR       - vendor of the device (empty if unknown)
+UM_MODEL        - model name of the device (empty if unknown)
+
+Likewise, the command 'run-parts /etc/usbmount/umount.d' is executed
+after a device or partition has been unmounted. The scripts can make use
+of the environment variables UM_DEVICE, UM_MOUNTPOINT and UM_FILESYSTEM.
+Note that vendor and model name are no longer easily available when the
+device has been removed. If you need this information in an unmount hook
+script, write it to a file in a mount hook script and read it back in
+the unmount hook script.

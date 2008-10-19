@@ -1,0 +1,54 @@
+#!/bin/sh
+set -e
+
+# If an upgrade from a version before 0.0.10 is aborted
+# and /etc/usbmount.conf has already been moved to
+# /etc/usbmount/usbmount.conf, move it back.
+if test "$1" = abort-upgrade || test "$1" = abort-install; then
+    if test -n "$2" && dpkg --compare-versions "$2" lt 0.0.10; then
+	if test -f /etc/usbmount/usbmount.conf 	&& ! test -e /etc/usbmount.conf; then
+	    mv /etc/usbmount/usbmount.conf /etc/usbmount.conf
+	fi
+	if test -d /etc/usbmount; then
+	    rmdir /etc/usbmount || :
+	fi
+    fi
+fi
+
+# If the package is removed or installing is aborted, try to remove the
+# default mountpoints. Failure to do so is not considered fatal.
+if test "$1" = remove || test "$1" = abort-install; then
+    rm -f /media/usb 2> /dev/null || :
+    for i in 0 1 2 3 4 5 6 7; do
+	rmdir /media/usb$i 2> /dev/null || :
+    done
+fi
+
+# If a fresh package install or upgarde from a version before 0.0.13 is
+# aborted and /etc/usbmount/.create_rules_symlink has already been
+# created, remove it.
+if test "$1" = abort-upgrade || test "$1" = abort-install; then
+    if test -z "$2" || dpkg --compare-versions "$2" lt 0.0.13; then
+	if test -f  /etc/usbmount/.create_rules_symlink; then
+	    rm -f /etc/usbmount/.create_rules_symlink
+	fi
+	if test "$1" = abort-install && test -z "$2"; then
+	    rmdir /etc/usbmount || :
+	fi
+    fi
+fi
+
+# If the package is purged, remove /etc/dev.d/block/usbmount.dev and the
+# /etc/udev/rules.d/z60_usbmount.rules symlink if they exist.
+if test "$1" = purge; then
+    if test -h /etc/udev/rules.d/z60_usbmount.rules; then
+	rm -f /etc/udev/rules.d/z60_usbmount.rules
+    fi
+    if test -f /etc/dev.d/block/usbmount.dev; then
+	rm -f /etc/dev.d/block/usbmount.dev
+    fi
+fi
+
+#DEBHELPER#
+
+exit 0

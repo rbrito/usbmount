@@ -1,0 +1,217 @@
+usbmount (0.0.15.1) unstable; urgency=low
+
+  * debian/control: actually include the DM-Upload-Allowed field.
+  * debian/compat: upgraded it to 5, since even stable has it.
+  * debian/control: updated build-dependency on debhelper >= 5.
+  * debian/control: eliminated the versioned dependency on udev,
+    since stable has it for a long time.
+
+ -- Rogério Brito <rbrito@ime.usp.br>  Tue, 30 Sep 2008 11:04:19 -0300
+
+usbmount (0.0.15) unstable; urgency=low
+
+  * New maintainer (Closes: #408621).
+  * debian/control: updated with my e-mail address.
+  * debian/control: add Homepage field. (removed lintian warning)
+  * debian/control: included DM-Upload-Allowed field. I am a DM now.
+  * debian/control: upgraded Standards-Version to 3.8.0. (lintian warning).
+  * debian/copyright: made machine-parseable format. (removed lintian warning)
+  * More changes to come...
+
+ -- Rogério Brito <rbrito@ime.usp.br>  Fri, 26 Sep 2008 15:58:33 -0300
+
+usbmount (0.0.14.1) unstable; urgency=low
+
+  [Rafael Laboissiere]
+  * debian/control:
+    - Bumped Standards-Version to 3.7.2 (no changes needed)
+    - Moved debhelper and cdbs from Build-Depends-Indep to Build-Depends,
+      complying with section 7.6 of the Debian Policy.
+  [Martin Dickopp]
+  * Acknowledge NMU (closes: #361351, #365225).
+  * Orphaning package, setting maintainer to Debian QA Group.
+
+ -- Martin Dickopp <martin@zero-based.org>  Sat, 27 Jan 2007 12:42:44 +0100
+
+usbmount (0.0.14-0.1) unstable; urgency=low
+
+  * Non-Maintainer Upload
+  * Change path of vol_id of udev to the new location in /lib/udev. Thanks to
+    Eric Evans for the patch (Closes: #361351)
+    - Minimum udev dependency now 0.084-2, first version to ship vol_id in
+      that location
+  * Fix udev rule syntax, patch by Eric Evans (Closes: #365225)
+
+ -- Jeroen van Wolffelaar <jeroen@wolffelaar.nl>  Sun, 30 Apr 2006 23:45:57 +0000
+
+usbmount (0.0.14) unstable; urgency=low
+
+  * Upload sponsored by Rafael Laboissiere.
+  * Make sure that /etc/dev.d/block/usbmount.dev is removed when the
+    package is purged.
+
+ -- Martin Dickopp <martin@zero-based.org>  Sun, 10 Jul 2005 22:17:00 +0200
+
+usbmount (0.0.13) unstable; urgency=medium
+
+  * Upload sponsored by Rafael Laboissiere.
+  * Adapt to udev changes: 'udev_volume_id' has been renamed to
+    'vol_id' and its output has changed (closes: #317022). Depend on
+    udev (>= 0.060-1). Without this change, usbmount doesn't work at
+    all with udev 0.060, therefore urgency=medium.
+  * New section about the vfat filesystem type added to the README file
+    (closes: #316758).
+  * /etc/dev.d is obsolete. Remove /etc/dev.d/block/usbmount.dev; the
+    usbmount script is now called by the new file /etc/udev/usbmount.rules.
+    Create symlink /etc/udev/rules.d/z60_usbmount.rules to this file if
+    usbmount is freshly installed or updated from a version before 0.0.13.
+
+ -- Martin Dickopp <martin@zero-based.org>  Fri,  8 Jul 2005 19:22:10 +0200
+
+usbmount (0.0.12) unstable; urgency=low
+
+  * Upload sponsored by Rafael Laboissiere.
+  * debian/control: update 'Standards-Version' to 3.6.2. No changes to the
+    package necessary.
+  * Search additional files in the /sys filesystem for vendor and model
+    name (closes: #315192).
+
+ -- Martin Dickopp <martin@zero-based.org>  Fri,  1 Jul 2005 19:11:44 +0200
+
+usbmount (0.0.11) unstable; urgency=low
+
+  * Upload sponsored by Rafael Laboissiere.
+  * If a device is not readable, wait up to 20 seconds for it to become
+    so (closes: #305672). Some devices apparently need a few seconds
+    initialization time before they can be accessed. Thanks to Peter
+    Stelmachovic for his help with debugging this issue.
+
+ -- Martin Dickopp <martin@zero-based.org>  Mon,  2 May 2005 14:19:15 +0200
+
+usbmount (0.0.10) unstable; urgency=low
+
+  * Upload sponsored by Rafael Laboissiere.
+  * When a partition (as opposed to a partition-less device) is mounted,
+    an underscore and the partition number are appended to the model name
+    symlink.
+  * The model name symlink now includes the vendor if known.
+  * Acquire lock before 'udev_volume_id' is called. This causes the
+    partitions (on a device with more than one partition) to be mounted in
+    the right order.
+  * Fixed typos in log messages.
+  * Run hook scripts when a device or partition is mounted or unmounted
+    (closes: #303562). Describe how to use this feature in the README file.
+  * Moved /etc/usbmount.conf to /etc/usbmount/usbmount.conf.
+  * Moved deletion of mount points in /media from prerm to postrm. Delete
+    them not only when the package is removed, but also when installing is
+    aborted.
+  * Moved creation and deletion of model name symlinks to hook scripts.
+
+ -- Martin Dickopp <martin@zero-based.org>  Tue, 12 Apr 2005 17:45:51 +0200
+
+usbmount (0.0.9) unstable; urgency=low
+
+  * Upload sponsored by Rafael Laboissiere.
+  * When a device is removed, make sure that only the corresponding model
+    symlink in /var/run/usbmount is removed (closes: #303376).
+  * Include directory /var/run/usbmount in package instead of creating it
+    in postinst (closes: #303434).
+  * Move creation of mount points in /media from 'postinst configure' to
+    'preinst install'. This ensures that the mount points are created if
+    the package is removed (but not purged) and then reinstalled.
+
+ -- Martin Dickopp <martin@zero-based.org>  Wed,  6 Apr 2005 23:54:53 +0200
+
+usbmount (0.0.8) unstable; urgency=low
+
+  * Upload sponsored by Rafael Laboissiere (closes: #298526).
+  * Filesystem type specific mount options can be specified.
+  * Use locking to serialize concurrent mount attempts. This ensures that
+    different mount points are chosen if a device contains more than one
+    mountable partition.
+  * Make sure that /var/run/usbmount is removed on package removal.
+  * More detailed package description and README file.
+
+ -- Martin Dickopp <martin@zero-based.org>  Sun,  3 Apr 2005 23:40:25 +0200
+
+usbmount (0.0.7) unstable; urgency=low
+
+  Rafael Laboissiere:
+
+  * First upload of this package to the official Debian distribution
+    (closes: #298526)
+  * NMU in the behalf of the upstream maintainer, which is also the
+    effective maintainer of the Debian package.
+
+  Martin Dickopp:
+
+  * Built as a Debian-native package again.
+  * Default configuration does not mount vfat filesystems any more.
+  * Put warning in configuration file that sync-mounting is not fully
+    implemented for vfat filesystem.
+  * Package description refers to new location of the homepage
+    (http://usbmount.alioth.debian.org/).
+
+ -- Martin Dickopp <martin@zero-based.org>  Wed,  9 Mar 2005 14:10:34 +0100
+
+usbmount (0.0.6-1) unstable; urgency=low
+
+  * New upstream release:
+    - Changed maintainer's email address from <martin-deb@zero-based.org>
+      to <martin@zero-based.org>.
+    - Create symlink in /var/run/usbmount instead of /var/usbmount. If the
+      directory /var/run/usbmount does not exist, it is created when a device
+      is plugged in.
+  * Updated package description to mention that symlinks in
+    /var/run/usbmount are created.
+  * Removed instructions for 'reportbug' to send bug reports to the upstream
+    maintainer instead of the Debian BTS.
+
+ -- Martin Dickopp <martin@zero-based.org>  Tue,  8 Mar 2005 17:19:05 +0100
+
+usbmount (0.0.5-1) unstable; urgency=low
+
+  * debian/control:
+    - Added myself to Uploaders field
+    - Start Description with lower-case letter
+    - Added Homepage link
+
+ -- Rafael Laboissiere <rafael@debian.org>  Tue,  8 Mar 2005 13:48:00 +0100
+
+usbmount (0.0.5) unstable; urgency=low
+
+  * Create symlinks (model names) in /var/usbmount.
+
+ -- Martin Dickopp <martin-deb@zero-based.org>  Wed, 23 Feb 2005 18:11:03 +0100
+
+usbmount (0.0.4) unstable; urgency=low
+
+  * Adapt to changes in udev_volume_id; depend on udev (>= 0.053-1).
+  * Redirect standard output and standard error to /dev/null; log via
+    syslog.
+  * More verbose logging can be turned on with a configuration variable.
+
+ -- Martin Dickopp <martin-deb@zero-based.org>  Mon, 21 Feb 2005 11:32:55 +0100
+
+usbmount (0.0.3) unstable; urgency=low
+
+  * Create /media if it doesn't already exist.
+  * Include instructions for the reportbug program to send bug reports to
+    the maintainer instead of the Debian BTS.
+  * Move mounting and unmounting script to /usr/share/usbmount/usbmount.
+
+ -- Martin Dickopp <martin-deb@zero-based.org>  Mon,  8 Nov 2004 19:03:12 +0100
+
+usbmount (0.0.2) unstable; urgency=low
+
+  * Don't kill any processes before unmounting; unmount lazily (-l option
+    to the umount command). Thanks to Martin F. Krafft for the suggestion.
+  * Build-Depends on debhelper >= 4.1.0 (required when cdbs is used).
+
+ -- Martin Dickopp <martin-deb@zero-based.org>  Tue, 26 Oct 2004 23:04:04 +0200
+
+usbmount (0.0.1) unstable; urgency=low
+
+  * Initial package.
+
+ -- Martin Dickopp <martin-deb@zero-based.org>  Tue, 26 Oct 2004 17:32:54 +0200

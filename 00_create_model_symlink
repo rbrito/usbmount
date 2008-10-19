@@ -1,0 +1,40 @@
+#!/bin/sh
+# This script creates the model name symlink in /var/run/usbmount.
+# Copyright (C) 2005 Martin Dickopp
+#
+# This file is free software; the copyright holder gives unlimited
+# permission to copy and/or distribute it, with or without
+# modifications, as long as this notice is preserved.
+#
+# This file is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY, to the extent permitted by law; without
+# even the implied warranty of MERCHANTABILITY or FITNESS FOR A
+# PARTICULAR PURPOSE.
+#
+set -e
+
+# Replace spaces with underscores, remove special characters in vendor
+# and model name.
+UM_VENDOR=`echo "$UM_VENDOR" | sed 's/ /_/g; s/[^0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ._-]//g'`
+UM_MODEL=`echo "$UM_MODEL" | sed 's/ /_/g; s/[^0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ._-]//g'`
+
+# Exit if both vendor and model name are empty.
+test -n "$UM_VENDOR" || test -n "$UM_MODEL" || exit 0
+
+# Build symlink name.
+if test -n "$UM_VENDOR" && test -n "$UM_MODEL"; then
+    name="${UM_VENDOR}_$UM_MODEL"
+else
+    name="$UM_VENDOR$UM_MODEL"
+fi
+
+# Append partition number, if any, to the symlink name.
+partition=`echo "$UM_DEVICE" | sed 's/^.*[^0123456789]\([0123456789]*\)/\1/'`
+if test -n "$partition"; then
+    name="${name}_$partition"
+fi
+
+# If the symlink does not yet exist, create it.
+test -e "/var/run/usbmount/$name" || ln -sf "$UM_MOUNTPOINT" "/var/run/usbmount/$name"
+
+exit 0

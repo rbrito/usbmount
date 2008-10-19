@@ -1,0 +1,5 @@
+usbmount usr/share/usbmount
+usbmount.rules etc/udev
+usbmount.conf etc/usbmount
+00_create_model_symlink etc/usbmount/mount.d
+00_remove_model_symlink etc/usbmount/umount.d

@@ -1,0 +1,193 @@
+#!/bin/sh
+# This script mounts USB mass storage devices when they are plugged in
+# and unmounts them when they are removed.
+# Copyright (C) 2004, 2005 Martin Dickopp
+#
+# This file is free software; the copyright holder gives unlimited
+# permission to copy and/or distribute it, with or without
+# modifications, as long as this notice is preserved.
+#
+# This file is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY, to the extent permitted by law; without
+# even the implied warranty of MERCHANTABILITY or FITNESS FOR A
+# PARTICULAR PURPOSE.
+#
+set -e
+exec > /dev/null 2>&1
+
+
+# Log a string via the syslog facility.
+log()
+{
+    if test $1 != debug || expr "$VERBOSE" : "[yY]" > /dev/null; then
+	logger -p user.$1 -t "usbmount[$$]" -- "$2"
+    fi
+}
+
+
+# Test if the first parameter is in the list given by the second
+# parameter.
+in_list()
+{
+    for v in $2; do
+	test "$1" != "$v" || return 0
+    done
+    return 1
+}
+
+
+# Test if /lib/udev/vol_id is executable.
+test -x /lib/udev/vol_id || { log err "cannnot execute /lib/udev/vol_id"; exit 1; }
+
+# Default values for configuration variables.
+MOUNTPOINTS=""
+FILESYSTEMS=""
+MOUNTOPTIONS=""
+FS_MOUNTOPTIONS=""
+VERBOSE="no"
+
+# Read configuration file.
+if test -r /etc/usbmount/usbmount.conf; then
+    . /etc/usbmount/usbmount.conf
+fi
+
+
+umask 022
+
+if test "$1" = add; then
+
+    # Acquire lock.
+    log debug "trying to acquire lock /var/run/usbmount/.mount.lock"
+    lockfile-create --retry 3 /var/run/usbmount/.mount || \
+	{ log err "cannot acquire lock /var/run/usbmount/.mount.lock"; exit 1; }
+    trap '( lockfile-remove /var/run/usbmount/.mount )' 0
+    log debug "acquired lock /var/run/usbmount/.mount.lock"
+
+    # Try to read from the device.  Some devices need a few seconds
+    # initialization time before they can be accessed.  Give up after
+    # 20 seconds.  Thanks to Peter Stelmachovic for his help with
+    # debugging this.
+    log debug "testing whether $DEVNAME is readable"
+    read_success=no
+    for t in 0 1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 17 18 19; do
+	if dd if="$DEVNAME" of=/dev/null bs=512 count=1; then
+	    read_success=yes
+	    break
+	fi
+	log debug "attempt $t to read from $DEVNAME failed"
+	sleep 1
+    done
+    if test "$read_success" != yes; then
+	log err "cannot read from $DEVNAME"
+	exit 1
+    fi
+
+    # Test if the device contains a filesystem.  If it doesn't, no
+    # further action is required, but calling vol_id has the side effect
+    # that the partition table is read and partition devices are created.
+    if /lib/udev/vol_id "$DEVNAME" | egrep -q '^ID_FS_USAGE=(filesystem|disklabel)$'; then
+	log debug "$DEVNAME contains a filesystem or disklabel"
+
+	fstype="`/lib/udev/vol_id -t \"$DEVNAME\"`"
+	log debug "$DEVNAME contains filesystem type $fstype"
+
+	# Test if the filesystem type is in the list of filesystem
+	# types to mount.
+	if in_list "$fstype" "$FILESYSTEMS"; then
+
+	    # Search an available mountpoint.
+	    for v in $MOUNTPOINTS; do
+		if test -d "$v" \
+		    && ! grep -q "^[^ ][^ ]*  *$v " /proc/mounts; then
+		    mountpoint="$v"
+		    log debug "mountpoint $mountpoint is available for $DEVNAME"
+		    break
+		fi
+	    done
+	    if test -n "$mountpoint"; then
+		# Determine mount options.
+		options=
+		for v in $FS_MOUNTOPTIONS; do
+		    if expr "$v" : "-fstype=$fstype,."; then
+			options="`echo \"$v\" | sed 's/^[^,]*,//'`"
+			break
+		    fi
+		done
+		if test -n "$MOUNTOPTIONS"; then
+		    options="$MOUNTOPTIONS${options:+,$options}"
+		fi
+
+		# Mount the filesystem.
+		log info "executing command: mount -t$fstype ${options:+-o$options} $DEVNAME $mountpoint"
+		mount "-t$fstype" "${options:+-o$options}" "$DEVNAME" "$mountpoint"
+
+		# Determine vendor and model.
+		vendor=
+		if test -r "/sys$DEVPATH/device/vendor"; then
+		    vendor="`cat \"/sys$DEVPATH/device/vendor\"`"
+		elif test -r "/sys$DEVPATH/../device/vendor"; then
+		    vendor="`cat \"/sys$DEVPATH/../device/vendor\"`"
+		elif test -r "/sys$DEVPATH/device/../manufacturer"; then
+		    vendor="`cat \"/sys$DEVPATH/device/../manufacturer\"`"
+		elif test -r "/sys$DEVPATH/../device/../manufacturer"; then
+		    vendor="`cat \"/sys$DEVPATH/../device/../manufacturer\"`"
+		fi
+		vendor="`echo \"$vendor\" | sed 's/^ *//; s/ *$//'`"
+		model=
+		if test -r "/sys$DEVPATH/device/model"; then
+		    model="`cat \"/sys$DEVPATH/device/model\"`"
+		elif test -r "/sys$DEVPATH/../device/model"; then
+		    model="`cat \"/sys$DEVPATH/../device/model\"`"
+		elif test -r "/sys$DEVPATH/device/../product"; then
+		    model="`cat \"/sys$DEVPATH/device/../product\"`"
+		elif test -r "/sys$DEVPATH/../device/../product"; then
+		    model="`cat \"/sys$DEVPATH/../device/../product\"`"
+		fi
+		model="`echo \"$model\" | sed 's/^ *//; s/ *$//'`"
+
+		# Run hook scripts; ignore errors.
+		export UM_DEVICE="$DEVNAME"
+		export UM_MOUNTPOINT="$mountpoint"
+		export UM_FILESYSTEM="$fstype"
+		export UM_MOUNTOPTIONS="$options"
+		export UM_VENDOR="$vendor"
+		export UM_MODEL="$model"
+		log info "executing command: run-parts /etc/usbmount/mount.d"
+		run-parts /etc/usbmount/mount.d || :
+	    else
+		# No suitable mount point found.
+		log warning "no mountpoint found for $DEVNAME"
+		exit 1
+	    fi
+	fi
+    else
+	log debug "$DEVNAME does not contain a filesystem or disklabel"
+    fi
+
+elif test "$1" = remove; then
+
+    # A block or partition device has been removed.
+    # Test if it is mounted.
+    while read device mountpoint fstype remainder; do
+	if test "$DEVNAME" = "$device"; then
+	    # If the mountpoint and filesystem type are maintained by
+	    # this script, unmount the filesystem.
+	    if in_list "$mountpoint" "$MOUNTPOINTS" \
+		&& in_list "$fstype" "$FILESYSTEMS"; then
+		log info "executing command: umount -l $mountpoint"
+		umount -l "$mountpoint"
+
+		# Run hook scripts; ignore errors.
+		export UM_DEVICE="$DEVNAME"
+		export UM_MOUNTPOINT="$mountpoint"
+		export UM_FILESYSTEM="$fstype"
+		log info "executing command: run-parts /etc/usbmount/umount.d"
+		run-parts /etc/usbmount/umount.d || :
+	    fi
+	    break
+	fi
+    done < /proc/mounts
+
+fi
+
+exit 0
