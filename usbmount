@@ -38,7 +38,7 @@ in_list()
 
 
 # Test if /lib/udev/vol_id is executable.
-test -x /lib/udev/vol_id || { log err "cannnot execute /lib/udev/vol_id"; exit 1; }
+test -x /lib/udev/vol_id || { log err "cannot execute /lib/udev/vol_id"; exit 1; }
 
 # Default values for configuration variables.
 ENABLED=1
