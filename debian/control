@@ -3,6 +3,8 @@ Section: admin
 Priority: extra
 Maintainer: Rogério Brito <rbrito@ime.usp.br>
 Build-Depends: cdbs, debhelper (>= 5)
+Vcs-Svn: svn://svn.debian.org/svn/usbmount/usbmount/trunk/
+Vcs-Browser: http://svn.debian.org/wsvn/usbmount
 DM-Upload-Allowed: yes
 Standards-Version: 3.8.0
 Homepage: http://usbmount.alioth.debian.org/

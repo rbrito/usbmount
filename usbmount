@@ -2,6 +2,7 @@
 # This script mounts USB mass storage devices when they are plugged in
 # and unmounts them when they are removed.
 # Copyright (C) 2004, 2005 Martin Dickopp
+# Copyright (C) 2008 Rogério Brito
 #
 # This file is free software; the copyright holder gives unlimited
 # permission to copy and/or distribute it, with or without
@@ -40,6 +41,7 @@ in_list()
 test -x /lib/udev/vol_id || { log err "cannnot execute /lib/udev/vol_id"; exit 1; }
 
 # Default values for configuration variables.
+ENABLED=1
 MOUNTPOINTS=""
 FILESYSTEMS=""
 MOUNTOPTIONS=""
@@ -51,6 +53,14 @@ if test -r /etc/usbmount/usbmount.conf; then
     . /etc/usbmount/usbmount.conf
 fi
 
+# Check if usbmount should be run.
+if [ "${ENABLED:-1}" -eq "0" ]; then
+    log info "usbmount is disabled, see /etc/usbmount/usbmount.conf"
+    exit 0
+fi
+
+# Create /var/run/usbmount/ if it does not exist.
+test -e /var/run/usbmount/ || mkdir /var/run/usbmount/
 
 umask 022
 
