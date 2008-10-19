@@ -1,3 +1,10 @@
+usbmount (0.0.16.1) UNRELEASED; urgency=low
+
+  [ Rafael Laboissiere ]
+  * debian/control: Add my name o the list of Uploaders
+
+ -- Rafael Laboissiere <rafael@debian.org>  Sun, 19 Oct 2008 20:44:32 +0200
+
 usbmount (0.0.16) unstable; urgency=low
 
   * debian/control: include Vcs-* fields with modifications.
@@ -5,7 +12,7 @@ usbmount (0.0.16) unstable; urgency=low
   * usbmount.conf: recreate /var/run/usbmount if non-existent. (Closes: #345364)
     (Tks Armin Berres for the inspiration above)
   * usbmount.rules: add support for firewire devices too. (Closes: #502687)
-  
+
  -- Rogério Brito <rbrito@ime.usp.br>  Sun, 19 Oct 2008 07:35:56 -0200
 
 usbmount (0.0.15.1) unstable; urgency=low
