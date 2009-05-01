@@ -1,18 +1,6 @@
 #!/bin/sh
 set -e
 
-# If the package is upgraded from a version before 0.0.10,
-# move /etc/usbmount.conf to /etc/usbmount/usbmount.conf.
-if test "$1" = upgrade || test "$1" = install; then
-    if test -n "$2" && dpkg --compare-versions "$2" lt 0.0.10 \
-	&& test -f /etc/usbmount.conf \
-	&& ! test -e /etc/usbmount/usbmount.conf; then
-	test -d /etc/usbmount || mkdir /etc/usbmount
-	echo Moving /etc/usbmount.conf to /etc/usbmount/usbmount.conf ...
-	mv /etc/usbmount.conf /etc/usbmount/usbmount.conf
-    fi
-fi
-
 # If the package is installed, try to create the default mountpoints.
 # Failure to do so is not considered fatal.
 if test "$1" = install; then

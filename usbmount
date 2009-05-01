@@ -2,7 +2,7 @@
 # This script mounts USB mass storage devices when they are plugged in
 # and unmounts them when they are removed.
 # Copyright (C) 2004, 2005 Martin Dickopp
-# Copyright (C) 2008 Rogério Brito
+# Copyright (C) 2008, 2009 Rogério Brito
 #
 # This file is free software; the copyright holder gives unlimited
 # permission to copy and/or distribute it, with or without
@@ -59,19 +59,21 @@ if [ "${ENABLED:-1}" -eq "0" ]; then
     exit 0
 fi
 
-# Create /var/run/usbmount/ if it does not exist.
-test -e /var/run/usbmount/ || mkdir /var/run/usbmount/
+# Per Policy 9.3.2, directories under /var/run/usbmount have to be checked
+# after every reboot.
+test -e /var/run/usbmount || mkdir /var/run/usbmount
 
 umask 022
 
 if test "$1" = add; then
 
     # Acquire lock.
-    log debug "trying to acquire lock /var/run/usbmount/.mount.lock"
-    lockfile-create --retry 3 /var/run/usbmount/.mount || \
-	{ log err "cannot acquire lock /var/run/usbmount/.mount.lock"; exit 1; }
-    trap '( lockfile-remove /var/run/usbmount/.mount )' 0
-    log debug "acquired lock /var/run/usbmount/.mount.lock"
+    LOCKFILE=/var/run/usbmount/.mount`echo "$DEVNAME" | sed 's%[^a-z0-9_]%-%g'`
+    log debug "trying to acquire lock $LOCKFILE.lock"
+    lockfile-create --retry 3 $LOCKFILE ||
+	{ log err "cannot acquire lock $LOCKFILE.lock"; exit 1; }
+    trap '( lockfile-remove $LOCKFILE )' 0
+    log debug "acquired lock $LOCKFILE.lock"
 
     # Try to read from the device.  Some devices need a few seconds
     # initialization time before they can be accessed.  Give up after
@@ -92,10 +94,19 @@ if test "$1" = add; then
 	exit 1
     fi
 
+    # Test if the device has an /etc/fstab entry. In that case, we will
+    # mount it using the regular mount command.
+    if grep -q "^[ 	]*$DEVNAME" /etc/fstab; then
+        log debug "$DEVNAME has an /dev/fstab entry, using that"
+
+	# Mount the filesystem.
+	log info "executing command: mount $DEVNAME"
+	mount "$DEVNAME"
+
     # Test if the device contains a filesystem.  If it doesn't, no
     # further action is required, but calling vol_id has the side effect
     # that the partition table is read and partition devices are created.
-    if /lib/udev/vol_id "$DEVNAME" | egrep -q '^ID_FS_USAGE=(filesystem|disklabel)$'; then
+    elif /lib/udev/vol_id "$DEVNAME" | egrep -q '^ID_FS_USAGE=(filesystem|disklabel)$'; then
 	log debug "$DEVNAME contains a filesystem or disklabel"
 
 	fstype="`/lib/udev/vol_id -t \"$DEVNAME\"`"

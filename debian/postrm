@@ -1,20 +1,6 @@
 #!/bin/sh
 set -e
 
-# If an upgrade from a version before 0.0.10 is aborted
-# and /etc/usbmount.conf has already been moved to
-# /etc/usbmount/usbmount.conf, move it back.
-if test "$1" = abort-upgrade || test "$1" = abort-install; then
-    if test -n "$2" && dpkg --compare-versions "$2" lt 0.0.10; then
-	if test -f /etc/usbmount/usbmount.conf 	&& ! test -e /etc/usbmount.conf; then
-	    mv /etc/usbmount/usbmount.conf /etc/usbmount.conf
-	fi
-	if test -d /etc/usbmount; then
-	    rmdir /etc/usbmount || :
-	fi
-    fi
-fi
-
 # If the package is removed or installing is aborted, try to remove the
 # default mountpoints. Failure to do so is not considered fatal.
 if test "$1" = remove || test "$1" = abort-install; then

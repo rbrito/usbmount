@@ -1,9 +1,29 @@
-usbmount (0.0.16.1) UNRELEASED; urgency=low
+usbmount (0.0.17) unstable; urgency=low
 
-  [ Rafael Laboissiere ]
-  * debian/control: Add my name o the list of Uploaders
+  * The "More Documentation, Please" release.
+  * debian/NEWS: create an intructive documentation file.
+  * debian/README:
+    + include more verbose instructive documentation. Closes: #502583.
+    + remove outdated information on vfat filesystms.
+    + mention that the package supports Firewire devices too.
+    + restructure the document a little.
+    + include brief instructions on troubleshooting usbmount behaviour.
+  * debian/{preinst,postrm}: remove legacy code.
+  * debian/control:
+    + include misc-depends on usbmount binary.
+    + update standards version to 3.8.1.
+    + mention that firewire is supported too in the long description.
+  * usbmount:
+    + respect entries already in /etc/fstab. Closes: #350633.
+      (Tks Joachim Breitner)
+    + use fine grained locking for devices. Closes: #403209.
+      (Tks Richard Atterer)
+  * usbmount.conf:
+    + comment heavily. Closes: #337483.
+      (Tks January Weiner, Jari Eskelinen)
+    + include vfat and hfsplus filesystems to be automounted.
 
- -- Rafael Laboissiere <rafael@debian.org>  Sun, 19 Oct 2008 20:44:32 +0200
+ -- Rogério Brito <rbrito@ime.usp.br>  Thu, 30 Apr 2009 19:52:59 -0300
 
 usbmount (0.0.16) unstable; urgency=low
 

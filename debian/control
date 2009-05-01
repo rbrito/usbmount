@@ -7,12 +7,12 @@ Vcs-Svn: svn://svn.debian.org/svn/usbmount/usbmount/trunk/
 Vcs-Browser: http://svn.debian.org/wsvn/usbmount
 DM-Upload-Allowed: yes
 Uploaders: Rafael Laboissiere <rafael@debian.org>
-Standards-Version: 3.8.0
+Standards-Version: 3.8.1
 Homepage: http://usbmount.alioth.debian.org/
 
 Package: usbmount
 Architecture: all
-Depends: udev, lockfile-progs
+Depends: udev, lockfile-progs, ${misc:Depends}
 Description: automatically mount and unmount USB mass storage devices
  This package automatically mounts USB mass storage devices (typically
  USB pens) when they are plugged in, and unmounts them when they are
@@ -25,6 +25,8 @@ Description: automatically mount and unmount USB mass storage devices
  .
  The script that does the (un)mounting is called by the udev daemon.
  Therefore, USBmount requires a 2.6 (or newer) kernel.
+ .
+ Firewire devices are also supported by USBmount.
  .
  USBmount is intended as a lightweight solution which is independent of
  a desktop environment. Users which would like an icon to appear when an
