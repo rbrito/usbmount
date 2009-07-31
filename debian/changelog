@@ -1,3 +1,10 @@
+usbmount (0.0.18) unstable; urgency=low
+
+  * usbmount.conf:
+    + add MOUNTOPTIONS nodiratime. Closes: #539386. (Tks Jari Aalto)
+
+ -- Rogério Brito <rbrito@ime.usp.br>  Fri, 31 Jul 2009 13:26:04 -0300
+
 usbmount (0.0.17) unstable; urgency=low
 
   * The "More Documentation, Please" release.
