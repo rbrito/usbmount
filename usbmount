@@ -16,15 +16,19 @@
 set -e
 exec > /dev/null 2>&1
 
+######################################################################
+# Auxiliary functions 
 
 # Log a string via the syslog facility.
+# Parameters:
+#  * the level of the message.
+#  * the message.
 log()
 {
     if test $1 != debug || expr "$VERBOSE" : "[yY]" > /dev/null; then
 	logger -p user.$1 -t "usbmount[$$]" -- "$2"
     fi
 }
-
 
 # Test if the first parameter is in the list given by the second
 # parameter.
@@ -36,9 +40,47 @@ in_list()
     return 1
 }
 
+# # Check if usbmount should be run.
+# check_if_usbmount_is_enabled()
+# {
+#     if [ "${ENABLED:-1}" -eq "0" ]; then
+# 	log info "usbmount is disabled, see /etc/usbmount/usbmount.conf"
+# 	exit 0
+#     fi
+# }
 
-# Test if /lib/udev/vol_id is executable.
-test -x /lib/udev/vol_id || { log err "cannot execute /lib/udev/vol_id"; exit 1; }
+# # Test if /lib/udev/vol_id is executable.
+# check_if_vol_id_is_usable()
+# {
+#     if [ ! -x /lib/udev/vol_id ]; then
+# 	log err "cannot execute /lib/udev/vol_id"
+# 	exit 1
+#     fi
+# }
+
+# # Read configuration file.
+# read_configuration_file()
+# {
+#     if [ -r /etc/usbmount/usbmount.conf ]; then
+# 	. /etc/usbmount/usbmount.conf
+# 	log debug "loaded usbmount configurations"
+#     fi
+# }
+
+# # Create /var/run/usbmount.
+# # Per Debian Policy 9.3.2, directories under /var/run/usbmount have
+# # to be checked after every reboot.
+# create_var_run_usbmount()
+# {
+#     if [ ! -e /var/run/usbmount ]; then
+# 	mkdir -p /var/run/usbmount
+# 	log debug "creating /var/run/usbmount directory"
+#     fi
+# }
+
+
+######################################################################
+# Main program
 
 # Default values for configuration variables.
 ENABLED=1
@@ -48,20 +90,32 @@ MOUNTOPTIONS=""
 FS_MOUNTOPTIONS=""
 VERBOSE="no"
 
-# Read configuration file.
-if test -r /etc/usbmount/usbmount.conf; then
+if [ -r /etc/usbmount/usbmount.conf ]; then
     . /etc/usbmount/usbmount.conf
+    log debug "loaded usbmount configurations"
 fi
 
-# Check if usbmount should be run.
 if [ "${ENABLED:-1}" -eq "0" ]; then
     log info "usbmount is disabled, see /etc/usbmount/usbmount.conf"
     exit 0
 fi
 
-# Per Policy 9.3.2, directories under /var/run/usbmount have to be checked
-# after every reboot.
-test -e /var/run/usbmount || mkdir /var/run/usbmount
+if [ ! -x /lib/udev/vol_id ]; then
+    log err "cannot execute /lib/udev/vol_id"
+    exit 1
+fi
+
+if [ ! -e /var/run/usbmount ]; then
+    mkdir -p /var/run/usbmount
+    log debug "creating /var/run/usbmount directory"
+fi
+
+
+#read_configuration_file
+#check_if_enabled
+#check_if_vol_id_is_usable
+#create_var_run_usbmount
+#log debug "finishing usbmount configuration"
 
 umask 022
 
