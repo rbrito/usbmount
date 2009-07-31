@@ -7,7 +7,7 @@ Vcs-Svn: svn://svn.debian.org/svn/usbmount/usbmount/trunk/
 Vcs-Browser: http://svn.debian.org/wsvn/usbmount
 DM-Upload-Allowed: yes
 Uploaders: Rafael Laboissiere <rafael@debian.org>
-Standards-Version: 3.8.1
+Standards-Version: 3.8.2
 Homepage: http://usbmount.alioth.debian.org/
 
 Package: usbmount
