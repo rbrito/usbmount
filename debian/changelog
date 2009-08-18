@@ -1,3 +1,17 @@
+usbmount (0.0.17.1) unstable; urgency=low
+
+  * usbmount:
+    + revert patch from #403209 (seems to introduce race conditions)
+      (Closes: #535238)
+  * usbmount.conf:
+    + include ext4 so that it can be mounted automatically.
+    + add MOUNTOPTIONS nodiratime. Closes: #539386. (Tks Jari Aalto)
+  * debian/control:
+    + include comment (allowed by policy).
+    + update standards version to 3.8.2 (no changes necessary).
+
+ -- Rogério Brito <rbrito@ime.usp.br>  Tue, 18 Aug 2009 08:45:55 -0300
+
 usbmount (0.0.17) unstable; urgency=low
 
   * The "More Documentation, Please" release.
