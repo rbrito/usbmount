@@ -20,15 +20,13 @@ exec > /dev/null 2>&1
 # Auxiliary functions 
 
 # Log a string via the syslog facility.
-# Parameters:
-#  * the level of the message.
-#  * the message.
 log()
 {
     if test $1 != debug || expr "$VERBOSE" : "[yY]" > /dev/null; then
 	logger -p user.$1 -t "usbmount[$$]" -- "$2"
     fi
 }
+
 
 # Test if the first parameter is in the list given by the second
 # parameter.
@@ -39,44 +37,6 @@ in_list()
     done
     return 1
 }
-
-# # Check if usbmount should be run.
-# check_if_usbmount_is_enabled()
-# {
-#     if [ "${ENABLED:-1}" -eq "0" ]; then
-# 	log info "usbmount is disabled, see /etc/usbmount/usbmount.conf"
-# 	exit 0
-#     fi
-# }
-
-# # Test if /lib/udev/vol_id is executable.
-# check_if_vol_id_is_usable()
-# {
-#     if [ ! -x /lib/udev/vol_id ]; then
-# 	log err "cannot execute /lib/udev/vol_id"
-# 	exit 1
-#     fi
-# }
-
-# # Read configuration file.
-# read_configuration_file()
-# {
-#     if [ -r /etc/usbmount/usbmount.conf ]; then
-# 	. /etc/usbmount/usbmount.conf
-# 	log debug "loaded usbmount configurations"
-#     fi
-# }
-
-# # Create /var/run/usbmount.
-# # Per Debian Policy 9.3.2, directories under /var/run/usbmount have
-# # to be checked after every reboot.
-# create_var_run_usbmount()
-# {
-#     if [ ! -e /var/run/usbmount ]; then
-# 	mkdir -p /var/run/usbmount
-# 	log debug "creating /var/run/usbmount directory"
-#     fi
-# }
 
 
 ######################################################################
@@ -90,44 +50,41 @@ MOUNTOPTIONS=""
 FS_MOUNTOPTIONS=""
 VERBOSE="no"
 
+# Read configuration file.
 if [ -r /etc/usbmount/usbmount.conf ]; then
     . /etc/usbmount/usbmount.conf
     log debug "loaded usbmount configurations"
 fi
 
+# Check if usbmount should be run.
 if [ "${ENABLED:-1}" -eq "0" ]; then
     log info "usbmount is disabled, see /etc/usbmount/usbmount.conf"
     exit 0
 fi
 
-if [ ! -x /lib/udev/vol_id ]; then
-    log err "cannot execute /lib/udev/vol_id"
+# Test if blkid is executable.
+if [ ! -x /sbin/blkid ]; then
+    log err "cannot execute /sbin/blkid"
     exit 1
 fi
 
+# Per Policy 9.3.2, directories under /var/run/usbmount have to be checked
+# after every reboot.
 if [ ! -e /var/run/usbmount ]; then
     mkdir -p /var/run/usbmount
     log debug "creating /var/run/usbmount directory"
 fi
-
-
-#read_configuration_file
-#check_if_enabled
-#check_if_vol_id_is_usable
-#create_var_run_usbmount
-#log debug "finishing usbmount configuration"
 
 umask 022
 
 if test "$1" = add; then
 
     # Acquire lock.
-    LOCKFILE=/var/run/usbmount/.mount`echo "$DEVNAME" | sed 's%[^a-z0-9_]%-%g'`
-    log debug "trying to acquire lock $LOCKFILE.lock"
-    lockfile-create --retry 3 $LOCKFILE ||
-	{ log err "cannot acquire lock $LOCKFILE.lock"; exit 1; }
-    trap '( lockfile-remove $LOCKFILE )' 0
-    log debug "acquired lock $LOCKFILE.lock"
+    log debug "trying to acquire lock /var/run/usbmount/.mount.lock"
+    lockfile-create --retry 3 /var/run/usbmount/.mount || \
+	{ log err "cannot acquire lock /var/run/usbmount/.mount.lock"; exit 1; }
+    trap '( lockfile-remove /var/run/usbmount/.mount )' 0
+    log debug "acquired lock /var/run/usbmount/.mount.lock"
 
     # Try to read from the device.  Some devices need a few seconds
     # initialization time before they can be accessed.  Give up after
@@ -160,10 +117,10 @@ if test "$1" = add; then
     # Test if the device contains a filesystem.  If it doesn't, no
     # further action is required, but calling vol_id has the side effect
     # that the partition table is read and partition devices are created.
-    elif /lib/udev/vol_id "$DEVNAME" | egrep -q '^ID_FS_USAGE=(filesystem|disklabel)$'; then
+    elif /sbin/blkid -p -o udev "$DEVNAME" | egrep -q '^ID_FS_USAGE=(filesystem|disklabel)$'; then
 	log debug "$DEVNAME contains a filesystem or disklabel"
 
-	fstype="`/lib/udev/vol_id -t \"$DEVNAME\"`"
+	fstype="`/sbin/blkid -s TYPE -o value \"$DEVNAME\"`"
 	log debug "$DEVNAME contains filesystem type $fstype"
 
 	# Test if the filesystem type is in the list of filesystem
