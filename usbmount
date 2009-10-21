@@ -86,57 +86,35 @@ if [ "$1" = "add" ]; then
     trap '( lockfile-remove /var/run/usbmount/.mount )' 0
     log debug "acquired lock /var/run/usbmount/.mount.lock"
 
-    # Try to read from the device.  Some devices need a few seconds
-    # initialization time before they can be accessed.  Give up after
-    # 20 seconds.  Thanks to Peter Stelmachovic for his help with
-    # debugging this.
-    log debug "testing whether $DEVNAME is readable"
-    read_success=no; T=0; RETRIES=20
-    while [ $T -lt $RETRIES ]; do
-	if dd if="$DEVNAME" of=/dev/null bs=512 count=1; then
-	    read_success=yes
-	    break
-	fi
-	T=$((T + 1));
-	log debug "attempt $T to read from $DEVNAME failed"
-	sleep 1
-    done
+    # Grab device information from device and "divide it"
+    #   FIXME: improvement: implement mounting by label (notice that labels
+    #   can contain spaces, which makes things a little bit less comfortable).
+    DEVINFO=$(/sbin/blkid -p $DEVNAME)
+    FSTYPE=$(echo "$DEVINFO" | sed -e 's/.*TYPE="\([^"]*\)".*/\1/g; s/\s*//g;')
+    UUID=$(echo "$DEVINFO"   | sed -e 's/.*UUID="\([^"]*\)".*/\1/g; s/\s*//g;')
+    USAGE=$(echo "$DEVINFO"  | sed -e 's/.*USAGE="\([^"]*\)".*/\1/g; s/\s*//g;')
 
-    if [ "$read_success" != "yes" ]; then
-	log err "could not read from $DEVNAME for $RETRIES seconds; aborting"
+    if ! echo $USAGE | egrep -q "(filesystem|disklabel)"; then
+	log info "$DEVNAME does not contain a filesystem or disklabel"
 	exit 1
     fi
 
-    UUID=$(/sbin/blkid "$DEVNAME" | sed -e 's/.*UUID="\([^"]*\)".*/\1/g; s/\s*//g;')
-    # Test if the device has an /etc/fstab entry. In that case, we will
-    # mount it using the regular mount command.
-    if grep -q "^[ 	]*$DEVNAME" /etc/fstab; then
-        log debug "$DEVNAME has an /dev/fstab entry, using that"
-
-	# Mount the filesystem.
+    # Try to use specifications in /etc/fstab first.
+    if egrep -q "[[:space::]]*$DEVNAME" /etc/fstab; then
 	log info "executing command: mount $DEVNAME"
-	mount "$DEVNAME"
+	mount $DEVNAME
 
-    # Test if the device has an /etc/fstab entry with its UUID, in this
-    # case we will mount it with a mount command on the mount point
     elif grep -q $UUID /etc/fstab; then
-        log debug "$DEVNAME has an /etc/fstab entry, with UUID $UUID, using that"
+        log info "executing command: mount -U $UUID"
+	mount -U $UUID
 
-        MOUNT_POINT="`grep $UUID /etc/fstab|awk '{print $2}'`"
-        log info "executing command: mount $MOUNT_POINT"
-	mount "$DEVNAME"
+    else
+	log debug "$DEVNAME contains filesystem type $FSTYPE"
 
-    # Test if the device contains a filesystem.
-    elif /sbin/blkid -p -o udev "$DEVNAME" | egrep -q '^ID_FS_USAGE=(filesystem|disklabel)$'; then
-	log debug "$DEVNAME contains a filesystem or disklabel"
-
-	fstype=$(/sbin/blkid -s TYPE -o value "$DEVNAME" | sed -e 's/\s*//g;')
-	log debug "$DEVNAME contains filesystem type $fstype"
-
+	fstype=$FSTYPE
 	# Test if the filesystem type is in the list of filesystem
 	# types to mount.
 	if in_list "$fstype" "$FILESYSTEMS"; then
-
 	    # Search an available mountpoint.
 	    for v in $MOUNTPOINTS; do
 		if test -d "$v" \
@@ -146,7 +124,7 @@ if [ "$1" = "add" ]; then
 		    break
 		fi
 	    done
-	    if test -n "$mountpoint"; then
+	    if [ -n "$mountpoint" ]; then
 		# Determine mount options.
 		options=
 		for v in $FS_MOUNTOPTIONS; do
@@ -155,14 +133,14 @@ if [ "$1" = "add" ]; then
 			break
 		    fi
 		done
-		if test -n "$MOUNTOPTIONS"; then
+		if [ -n "$MOUNTOPTIONS" ]; then
 		    options="$MOUNTOPTIONS${options:+,$options}"
 		fi
-
+		
 		# Mount the filesystem.
 		log info "executing command: mount -t$fstype ${options:+-o$options} $DEVNAME $mountpoint"
 		mount "-t$fstype" "${options:+-o$options}" "$DEVNAME" "$mountpoint"
-
+		
 		# Determine vendor and model.
 		vendor=
 		if [ -r "/sys$DEVPATH/device/vendor" ]; then
@@ -175,7 +153,7 @@ if [ "$1" = "add" ]; then
 		    vendor="`cat \"/sys$DEVPATH/../device/../manufacturer\"`"
 		fi
 		vendor="`echo \"$vendor\" | sed 's/^ *//; s/ *$//'`"
-
+		
 		model=
 		if [ -r "/sys$DEVPATH/device/model" ]; then
 		    model="`cat \"/sys$DEVPATH/device/model\"`"
@@ -187,7 +165,7 @@ if [ "$1" = "add" ]; then
 		    model="`cat \"/sys$DEVPATH/../device/../product\"`"
 		fi
 		model="`echo \"$model\" | sed 's/^ *//; s/ *$//'`"
-
+		
 		# Run hook scripts; ignore errors.
 		export UM_DEVICE="$DEVNAME"
 		export UM_MOUNTPOINT="$mountpoint"
@@ -203,11 +181,8 @@ if [ "$1" = "add" ]; then
 		exit 1
 	    fi
 	fi
-    else
-	log debug "$DEVNAME does not contain a filesystem or disklabel"
     fi
-
-elif test "$1" = remove; then
+elif [ "$1" = remove ]; then
 
     # A block or partition device has been removed.
     # Test if it is mounted.
@@ -230,7 +205,7 @@ elif test "$1" = remove; then
 	    break
 	fi
     done < /proc/mounts
-
 fi
 
+log debug "finishing execution of usbmount"
 exit 0
