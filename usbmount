@@ -20,15 +20,13 @@ exec > /dev/null 2>&1
 # Auxiliary functions 
 
 # Log a string via the syslog facility.
-# Parameters:
-#  * the level of the message.
-#  * the message.
 log()
 {
     if test $1 != debug || expr "$VERBOSE" : "[yY]" > /dev/null; then
 	logger -p user.$1 -t "usbmount[$$]" -- "$2"
     fi
 }
+
 
 # Test if the first parameter is in the list given by the second
 # parameter.
@@ -39,44 +37,6 @@ in_list()
     done
     return 1
 }
-
-# # Check if usbmount should be run.
-# check_if_usbmount_is_enabled()
-# {
-#     if [ "${ENABLED:-1}" -eq "0" ]; then
-# 	log info "usbmount is disabled, see /etc/usbmount/usbmount.conf"
-# 	exit 0
-#     fi
-# }
-
-# # Test if /lib/udev/vol_id is executable.
-# check_if_vol_id_is_usable()
-# {
-#     if [ ! -x /lib/udev/vol_id ]; then
-# 	log err "cannot execute /lib/udev/vol_id"
-# 	exit 1
-#     fi
-# }
-
-# # Read configuration file.
-# read_configuration_file()
-# {
-#     if [ -r /etc/usbmount/usbmount.conf ]; then
-# 	. /etc/usbmount/usbmount.conf
-# 	log debug "loaded usbmount configurations"
-#     fi
-# }
-
-# # Create /var/run/usbmount.
-# # Per Debian Policy 9.3.2, directories under /var/run/usbmount have
-# # to be checked after every reboot.
-# create_var_run_usbmount()
-# {
-#     if [ ! -e /var/run/usbmount ]; then
-# 	mkdir -p /var/run/usbmount
-# 	log debug "creating /var/run/usbmount directory"
-#     fi
-# }
 
 
 ######################################################################
@@ -90,64 +50,64 @@ MOUNTOPTIONS=""
 FS_MOUNTOPTIONS=""
 VERBOSE="no"
 
+# Read configuration file.
 if [ -r /etc/usbmount/usbmount.conf ]; then
     . /etc/usbmount/usbmount.conf
     log debug "loaded usbmount configurations"
 fi
 
+# Check if usbmount should be run.
 if [ "${ENABLED:-1}" -eq "0" ]; then
     log info "usbmount is disabled, see /etc/usbmount/usbmount.conf"
     exit 0
 fi
 
-if [ ! -x /lib/udev/vol_id ]; then
-    log err "cannot execute /lib/udev/vol_id"
+# Test if blkid is executable.
+if [ ! -x /sbin/blkid ]; then
+    log err "cannot execute /sbin/blkid"
     exit 1
 fi
 
+# Per Policy 9.3.2, directories under /var/run/usbmount have to be checked
+# after every reboot.
 if [ ! -e /var/run/usbmount ]; then
     mkdir -p /var/run/usbmount
     log debug "creating /var/run/usbmount directory"
 fi
 
-
-#read_configuration_file
-#check_if_enabled
-#check_if_vol_id_is_usable
-#create_var_run_usbmount
-#log debug "finishing usbmount configuration"
-
 umask 022
 
-if test "$1" = add; then
+if [ "$1" = "add" ]; then
 
     # Acquire lock.
-    LOCKFILE=/var/run/usbmount/.mount`echo "$DEVNAME" | sed 's%[^a-z0-9_]%-%g'`
-    log debug "trying to acquire lock $LOCKFILE.lock"
-    lockfile-create --retry 3 $LOCKFILE ||
-	{ log err "cannot acquire lock $LOCKFILE.lock"; exit 1; }
-    trap '( lockfile-remove $LOCKFILE )' 0
-    log debug "acquired lock $LOCKFILE.lock"
+    log debug "trying to acquire lock /var/run/usbmount/.mount.lock"
+    lockfile-create --retry 3 /var/run/usbmount/.mount || \
+	{ log err "cannot acquire lock /var/run/usbmount/.mount.lock"; exit 1; }
+    trap '( lockfile-remove /var/run/usbmount/.mount )' 0
+    log debug "acquired lock /var/run/usbmount/.mount.lock"
 
     # Try to read from the device.  Some devices need a few seconds
     # initialization time before they can be accessed.  Give up after
     # 20 seconds.  Thanks to Peter Stelmachovic for his help with
     # debugging this.
     log debug "testing whether $DEVNAME is readable"
-    read_success=no
-    for t in 0 1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 17 18 19; do
+    read_success=no; T=0; RETRIES=20
+    while [ $T -lt $RETRIES ]; do
 	if dd if="$DEVNAME" of=/dev/null bs=512 count=1; then
 	    read_success=yes
 	    break
 	fi
-	log debug "attempt $t to read from $DEVNAME failed"
+	T=$((T + 1));
+	log debug "attempt $T to read from $DEVNAME failed"
 	sleep 1
     done
-    if test "$read_success" != yes; then
-	log err "cannot read from $DEVNAME"
+
+    if [ "$read_success" != "yes" ]; then
+	log err "could not read from $DEVNAME for $RETRIES seconds; aborting"
 	exit 1
     fi
 
+    UUID=$(/sbin/blkid "$DEVNAME" | sed -e 's/.*UUID="\([^"]*\)".*/\1/g; s/\s*//g;')
     # Test if the device has an /etc/fstab entry. In that case, we will
     # mount it using the regular mount command.
     if grep -q "^[ 	]*$DEVNAME" /etc/fstab; then
@@ -157,13 +117,20 @@ if test "$1" = add; then
 	log info "executing command: mount $DEVNAME"
 	mount "$DEVNAME"
 
-    # Test if the device contains a filesystem.  If it doesn't, no
-    # further action is required, but calling vol_id has the side effect
-    # that the partition table is read and partition devices are created.
-    elif /lib/udev/vol_id "$DEVNAME" | egrep -q '^ID_FS_USAGE=(filesystem|disklabel)$'; then
+    # Test if the device has an /etc/fstab entry with its UUID, in this
+    # case we will mount it with a mount command on the mount point
+    elif grep -q $UUID /etc/fstab; then
+        log debug "$DEVNAME has an /etc/fstab entry, with UUID $UUID, using that"
+
+        MOUNT_POINT="`grep $UUID /etc/fstab|awk '{print $2}'`"
+        log info "executing command: mount $MOUNT_POINT"
+	mount "$DEVNAME"
+
+    # Test if the device contains a filesystem.
+    elif /sbin/blkid -p -o udev "$DEVNAME" | egrep -q '^ID_FS_USAGE=(filesystem|disklabel)$'; then
 	log debug "$DEVNAME contains a filesystem or disklabel"
 
-	fstype="`/lib/udev/vol_id -t \"$DEVNAME\"`"
+	fstype=$(/sbin/blkid -s TYPE -o value "$DEVNAME" | sed -e 's/\s*//g;')
 	log debug "$DEVNAME contains filesystem type $fstype"
 
 	# Test if the filesystem type is in the list of filesystem
@@ -198,24 +165,25 @@ if test "$1" = add; then
 
 		# Determine vendor and model.
 		vendor=
-		if test -r "/sys$DEVPATH/device/vendor"; then
+		if [ -r "/sys$DEVPATH/device/vendor" ]; then
 		    vendor="`cat \"/sys$DEVPATH/device/vendor\"`"
-		elif test -r "/sys$DEVPATH/../device/vendor"; then
+		elif [ -r "/sys$DEVPATH/../device/vendor" ]; then
 		    vendor="`cat \"/sys$DEVPATH/../device/vendor\"`"
-		elif test -r "/sys$DEVPATH/device/../manufacturer"; then
+		elif [ -r "/sys$DEVPATH/device/../manufacturer" ]; then
 		    vendor="`cat \"/sys$DEVPATH/device/../manufacturer\"`"
-		elif test -r "/sys$DEVPATH/../device/../manufacturer"; then
+		elif [ -r "/sys$DEVPATH/../device/../manufacturer" ]; then
 		    vendor="`cat \"/sys$DEVPATH/../device/../manufacturer\"`"
 		fi
 		vendor="`echo \"$vendor\" | sed 's/^ *//; s/ *$//'`"
+
 		model=
-		if test -r "/sys$DEVPATH/device/model"; then
+		if [ -r "/sys$DEVPATH/device/model" ]; then
 		    model="`cat \"/sys$DEVPATH/device/model\"`"
-		elif test -r "/sys$DEVPATH/../device/model"; then
+		elif [ -r "/sys$DEVPATH/../device/model" ]; then
 		    model="`cat \"/sys$DEVPATH/../device/model\"`"
-		elif test -r "/sys$DEVPATH/device/../product"; then
+		elif [ -r "/sys$DEVPATH/device/../product" ]; then
 		    model="`cat \"/sys$DEVPATH/device/../product\"`"
-		elif test -r "/sys$DEVPATH/../device/../product"; then
+		elif [ -r "/sys$DEVPATH/../device/../product" ]; then
 		    model="`cat \"/sys$DEVPATH/../device/../product\"`"
 		fi
 		model="`echo \"$model\" | sed 's/^ *//; s/ *$//'`"
@@ -244,7 +212,7 @@ elif test "$1" = remove; then
     # A block or partition device has been removed.
     # Test if it is mounted.
     while read device mountpoint fstype remainder; do
-	if test "$DEVNAME" = "$device"; then
+	if [ "$DEVNAME" = "$device" ]; then
 	    # If the mountpoint and filesystem type are maintained by
 	    # this script, unmount the filesystem.
 	    if in_list "$mountpoint" "$MOUNTPOINTS" \

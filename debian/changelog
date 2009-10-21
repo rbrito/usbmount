@@ -1,11 +1,38 @@
 usbmount (0.0.18) unstable; urgency=low
 
+  * usbmount:
+    + migrate from vol_id to blkid; patch adapted from gregoa.
+      (Closes: #548627)
+    + support mounting by UUID; patch adapted from Patrick Schoenfeld.
+      (Closes: #551757)
+    + include extra debugging points.
+  * usbmount.rules:
+    + update rules for new naming scheme of recent kernels/udev combo.
+  * debian/NEWS:
+    + really include the file (Closes: #548785).
+  * debian/control:
+    + update standards version to 3.8.3 (no changes necessary).
+    + reorder fields.
+    + remove uploaders; Rafael is welcome any time he wants to.
+  * debian/copyright:
+    + fix my e-mail address.
+    + consolidate entries.
+
+ -- Rogério Brito <rbrito@ime.usp.br>  Wed, 21 Oct 2009 02:14:18 -0200
+
+usbmount (0.0.17.1) unstable; urgency=low
+
+  * usbmount:
+    + revert patch from #403209 (seems to introduce race conditions)
+      (Closes: #535238)
   * usbmount.conf:
+    + include ext4 so that it can be mounted automatically.
     + add MOUNTOPTIONS nodiratime. Closes: #539386. (Tks Jari Aalto)
   * debian/control:
+    + include comment (allowed by policy).
     + update standards version to 3.8.2 (no changes necessary).
 
- -- Rogério Brito <rbrito@ime.usp.br>  Fri, 31 Jul 2009 13:26:04 -0300
+ -- Rogério Brito <rbrito@ime.usp.br>  Tue, 18 Aug 2009 08:45:55 -0300
 
 usbmount (0.0.17) unstable; urgency=low
 

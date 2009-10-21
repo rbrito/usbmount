@@ -1,13 +1,13 @@
+# -*- coding: utf-8 -*-
 Source: usbmount
 Section: admin
 Priority: extra
-Maintainer: Rogério Brito <rbrito@ime.usp.br>
+Standards-Version: 3.8.3
 Build-Depends: cdbs, debhelper (>= 5)
+Maintainer: Rogério Brito <rbrito@ime.usp.br>
+DM-Upload-Allowed: yes
 Vcs-Svn: svn://svn.debian.org/svn/usbmount/usbmount/trunk/
 Vcs-Browser: http://svn.debian.org/wsvn/usbmount
-DM-Upload-Allowed: yes
-Uploaders: Rafael Laboissiere <rafael@debian.org>
-Standards-Version: 3.8.2
 Homepage: http://usbmount.alioth.debian.org/
 
 Package: usbmount
