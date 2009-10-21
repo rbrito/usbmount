@@ -1,8 +1,11 @@
 usbmount (0.0.18) unstable; urgency=low
 
   * usbmount:
-    + migrate from vol_id to blkid; patch adapted from gregoa. (Closes: #548627)
+    + migrate from vol_id to blkid; patch adapted from gregoa.
+      (Closes: #548627)
     + include extra debugging points.
+    + include support for mounting by UUID; patch adapted from Patrick Schoenfeld.
+      (Closes: #551757)
   * usbmount.rules:
     + update rules for new naming scheme of recent kernels/udev combo.
   * debian/NEWS:
@@ -15,7 +18,7 @@ usbmount (0.0.18) unstable; urgency=low
     + fix my e-mail address.
     + consolidate entries.
 
- -- Rogério Brito <rbrito@ime.usp.br>  Tue, 20 Oct 2009 18:30:39 -0200
+ -- Rogério Brito <rbrito@ime.usp.br>  Wed, 21 Oct 2009 02:14:18 -0200
 
 usbmount (0.0.17.1) unstable; urgency=low
 
