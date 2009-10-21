@@ -3,9 +3,9 @@ usbmount (0.0.18) unstable; urgency=low
   * usbmount:
     + migrate from vol_id to blkid; patch adapted from gregoa.
       (Closes: #548627)
-    + include extra debugging points.
-    + include support for mounting by UUID; patch adapted from Patrick Schoenfeld.
+    + support mounting by UUID; patch adapted from Patrick Schoenfeld.
       (Closes: #551757)
+    + include extra debugging points.
   * usbmount.rules:
     + update rules for new naming scheme of recent kernels/udev combo.
   * debian/NEWS:
