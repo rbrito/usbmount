@@ -1,3 +1,10 @@
+usbmount (0.0.19) UNRELEASED; urgency=low
+
+  * usbmount:
+    + new strategy of doing things, much less complicated.
+
+ -- Rogério Brito <rbrito@ime.usp.br>  Wed, 21 Oct 2009 05:18:01 -0200
+
 usbmount (0.0.18) unstable; urgency=low
 
   * usbmount:
