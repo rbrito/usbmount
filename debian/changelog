@@ -1,9 +1,9 @@
 usbmount (0.0.19) UNRELEASED; urgency=low
 
-  * usbmount:
-    + new strategy of doing things, much less complicated.
+  * new strategy in usbmount, potentially less complicated.
+  * include dependency on util-linux (>> 2.16).
 
- -- Rogério Brito <rbrito@ime.usp.br>  Wed, 21 Oct 2009 05:18:01 -0200
+ -- Rogério Brito <rbrito@ime.usp.br>  Thu, 22 Oct 2009 02:52:36 -0200
 
 usbmount (0.0.18) unstable; urgency=low
 
