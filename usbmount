@@ -22,7 +22,7 @@ exec > /dev/null 2>&1
 # Log a string via the syslog facility.
 log()
 {
-    if test $1 != debug || expr "$VERBOSE" : "[yY]" > /dev/null; then
+    if [ $1 != debug ] || expr "$VERBOSE" : "[yY]" > /dev/null; then
 	logger -p user.$1 -t "usbmount[$$]" -- "$2"
     fi
 }
@@ -33,7 +33,7 @@ log()
 in_list()
 {
     for v in $2; do
-	test "$1" != "$v" || return 0
+	[ "$1" != "$v" ] || return 0
     done
     return 1
 }
@@ -117,7 +117,7 @@ if [ "$1" = "add" ]; then
 	if in_list "$fstype" "$FILESYSTEMS"; then
 	    # Search an available mountpoint.
 	    for v in $MOUNTPOINTS; do
-		if test -d "$v" \
+		if [ -d "$v" ] \
 		    && ! grep -q "^[^ ][^ ]*  *$v " /proc/mounts; then
 		    mountpoint="$v"
 		    log debug "mountpoint $mountpoint is available for $DEVNAME"
