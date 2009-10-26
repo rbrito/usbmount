@@ -127,7 +127,7 @@ if [ "$1" = add ]; then
 		options=
 		for v in $FS_MOUNTOPTIONS; do
 		    if expr "$v" : "-fstype=$fstype,."; then
-			options="`echo \"$v\" | sed 's/^[^,]*,//'`"
+			options="$(echo "$v" | sed 's/^[^,]*,//')"
 			break
 		    fi
 		done
