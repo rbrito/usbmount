@@ -115,8 +115,7 @@ if [ "$1" = add ]; then
 	if in_list "$fstype" "$FILESYSTEMS"; then
 	    # Search an available mountpoint.
 	    for v in $MOUNTPOINTS; do
-		if [ -d "$v" ] \
-		    && ! grep -q "^[^ ][^ ]*  *$v " /proc/mounts; then
+		if [ -d "$v" ] && ! grep -q "^[^ ][^ ]*  *$v " /proc/mounts; then
 		    mountpoint="$v"
 		    log debug "mountpoint $mountpoint is available for $DEVNAME"
 		    break
@@ -188,8 +187,8 @@ elif [ "$1" = remove ]; then
 	if [ "$DEVNAME" = "$device" ]; then
 	    # If the mountpoint and filesystem type are maintained by
 	    # this script, unmount the filesystem.
-	    if in_list "$mountpoint" "$MOUNTPOINTS" \
-		&& in_list "$fstype" "$FILESYSTEMS"; then
+	    if in_list "$mountpoint" "$MOUNTPOINTS" &&
+		in_list "$fstype" "$FILESYSTEMS"; then
 		log info "executing command: umount -l $mountpoint"
 		umount -l "$mountpoint"
 
