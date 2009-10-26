@@ -17,7 +17,7 @@ set -e
 exec > /dev/null 2>&1
 
 ######################################################################
-# Auxiliary functions 
+# Auxiliary functions
 
 # Log a string via the syslog facility.
 log()
@@ -136,11 +136,11 @@ if [ "$1" = "add" ]; then
 		if [ -n "$MOUNTOPTIONS" ]; then
 		    options="$MOUNTOPTIONS${options:+,$options}"
 		fi
-		
+
 		# Mount the filesystem.
 		log info "executing command: mount -t$fstype ${options:+-o$options} $DEVNAME $mountpoint"
 		mount "-t$fstype" "${options:+-o$options}" "$DEVNAME" "$mountpoint"
-		
+
 		# Determine vendor and model.
 		vendor=
 		if [ -r "/sys$DEVPATH/device/vendor" ]; then
@@ -153,7 +153,7 @@ if [ "$1" = "add" ]; then
 		    vendor="`cat \"/sys$DEVPATH/../device/../manufacturer\"`"
 		fi
 		vendor="$(echo "$vendor" | sed 's/^[[:space:]]\+//; s/[[:space:]]\+$//')"
-		
+
 		model=
 		if [ -r "/sys$DEVPATH/device/model" ]; then
 		    model="`cat \"/sys$DEVPATH/device/model\"`"
@@ -165,7 +165,7 @@ if [ "$1" = "add" ]; then
 		    model="`cat \"/sys$DEVPATH/../device/../product\"`"
 		fi
 		model="$(echo "$model" | sed 's/^[[:space:]]\+//; s/[[:space:]]\+$//')"
-		
+
 		# Run hook scripts; ignore errors.
 		export UM_DEVICE="$DEVNAME"
 		export UM_MOUNTPOINT="$mountpoint"
