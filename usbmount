@@ -44,18 +44,18 @@ in_list()
 
 # Default values for configuration variables.
 ENABLED=1
-MOUNTPOINTS=""
-FILESYSTEMS=""
-MOUNTOPTIONS=""
-FS_MOUNTOPTIONS=""
-VERBOSE="no"
+MOUNTPOINTS=
+FILESYSTEMS=
+MOUNTOPTIONS=
+FS_MOUNTOPTIONS=
+VERBOSE=no
 
 if [ -r /etc/usbmount/usbmount.conf ]; then
     . /etc/usbmount/usbmount.conf
     log debug "loaded usbmount configurations"
 fi
 
-if [ "${ENABLED:-1}" -eq "0" ]; then
+if [ "${ENABLED:-1}" -eq 0 ]; then
     log info "usbmount is disabled, see /etc/usbmount/usbmount.conf"
     exit 0
 fi
@@ -75,7 +75,7 @@ fi
 umask 022
 
 
-if [ "$1" = "add" ]; then
+if [ "$1" = add ]; then
 
     # Acquire lock.
     log debug "trying to acquire lock /var/run/usbmount/.mount.lock"
