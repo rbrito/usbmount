@@ -50,19 +50,16 @@ MOUNTOPTIONS=""
 FS_MOUNTOPTIONS=""
 VERBOSE="no"
 
-# Read configuration file.
 if [ -r /etc/usbmount/usbmount.conf ]; then
     . /etc/usbmount/usbmount.conf
     log debug "loaded usbmount configurations"
 fi
 
-# Check if usbmount should be run.
 if [ "${ENABLED:-1}" -eq "0" ]; then
     log info "usbmount is disabled, see /etc/usbmount/usbmount.conf"
     exit 0
 fi
 
-# Test if blkid is executable.
 if [ ! -x /sbin/blkid ]; then
     log err "cannot execute /sbin/blkid"
     exit 1
@@ -76,6 +73,7 @@ if [ ! -e /var/run/usbmount ]; then
 fi
 
 umask 022
+
 
 if [ "$1" = "add" ]; then
 
