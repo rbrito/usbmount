@@ -68,7 +68,7 @@ if [ ! -x /sbin/blkid ]; then
     exit 1
 fi
 
-# Per Policy 9.3.2, directories under /var/run/usbmount have to be checked
+# Per Policy 9.3.2, directories under /var/run have to be created
 # after every reboot.
 if [ ! -e /var/run/usbmount ]; then
     mkdir -p /var/run/usbmount
@@ -90,9 +90,9 @@ if [ "$1" = "add" ]; then
     #   FIXME: improvement: implement mounting by label (notice that labels
     #   can contain spaces, which makes things a little bit less comfortable).
     DEVINFO=$(/sbin/blkid -p $DEVNAME)
-    FSTYPE=$(echo "$DEVINFO" | sed -e 's/.*TYPE="\([^"]*\)".*/\1/g; s/\s*//g;')
-    UUID=$(echo "$DEVINFO"   | sed -e 's/.*UUID="\([^"]*\)".*/\1/g; s/\s*//g;')
-    USAGE=$(echo "$DEVINFO"  | sed -e 's/.*USAGE="\([^"]*\)".*/\1/g; s/\s*//g;')
+    FSTYPE=$(echo "$DEVINFO" | sed 's/.*TYPE="\([^"]*\)".*/\1/g; s/[[:space:]]*//g;')
+    UUID=$(echo "$DEVINFO"   | sed 's/.*UUID="\([^"]*\)".*/\1/g; s/[[:space:]]*//g;')
+    USAGE=$(echo "$DEVINFO"  | sed 's/.*USAGE="\([^"]*\)".*/\1/g; s/[[:space:]]*//g;')
 
     if ! echo $USAGE | egrep -q "(filesystem|disklabel)"; then
 	log info "$DEVNAME does not contain a filesystem or disklabel"
@@ -152,7 +152,7 @@ if [ "$1" = "add" ]; then
 		elif [ -r "/sys$DEVPATH/../device/../manufacturer" ]; then
 		    vendor="`cat \"/sys$DEVPATH/../device/../manufacturer\"`"
 		fi
-		vendor="`echo \"$vendor\" | sed 's/^ *//; s/ *$//'`"
+		vendor="$(echo "$vendor" | sed 's/^[[:space:]]\+//; s/[[:space:]]\+$//')"
 		
 		model=
 		if [ -r "/sys$DEVPATH/device/model" ]; then
@@ -164,7 +164,7 @@ if [ "$1" = "add" ]; then
 		elif [ -r "/sys$DEVPATH/../device/../product" ]; then
 		    model="`cat \"/sys$DEVPATH/../device/../product\"`"
 		fi
-		model="`echo \"$model\" | sed 's/^ *//; s/ *$//'`"
+		model="$(echo "$model" | sed 's/^[[:space:]]\+//; s/[[:space:]]\+$//')"
 		
 		# Run hook scripts; ignore errors.
 		export UM_DEVICE="$DEVNAME"
