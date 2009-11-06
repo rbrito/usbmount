@@ -202,7 +202,9 @@ elif [ "$1" = remove ]; then
 	    break
 	fi
     done < /proc/mounts
+else
+    log err "unexpected: action '$1'"
+    exit 1
 fi
 
-log debug "finishing execution of usbmount"
-exit 0
+log debug "usbmount execution finished"
