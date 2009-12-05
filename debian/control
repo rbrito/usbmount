@@ -13,6 +13,7 @@ Homepage: http://usbmount.alioth.debian.org/
 Package: usbmount
 Architecture: all
 Depends: udev, lockfile-progs, util-linux (>> 2.16), ${misc:Depends}
+Recommends: pmount
 Description: automatically mount and unmount USB mass storage devices
  This package automatically mounts USB mass storage devices (typically
  USB pens) when they are plugged in, and unmounts them when they are
