@@ -1,10 +1,20 @@
-usbmount (0.0.19) UNRELEASED; urgency=low
+usbmount (0.0.19) unstable; urgency=low
 
+  * The "Ho, Ho, Ho" release.
   * new strategy in usbmount, potentially less complicated.
+  * usbmount:
+    + simplify the usbmount script.
+    + strive for legibility.
+    + avoid use of awk.
+    + make fewer calls to blkid.
+    + various code cleanups (Many, many thanks to Cristian Ionescu-Idbohrn).
+    + log unexpected actions.
+    + removes unecessary delay.
+    + much more to come.
   * include dependency on util-linux (>> 2.16).
   * include recommends on pmount.
 
- -- Rogério Brito <rbrito@ime.usp.br>  Sat, 05 Dec 2009 15:29:58 -0200
+ -- Rogério Brito <rbrito@ime.usp.br>  Thu, 24 Dec 2009 12:58:46 -0200
 
 usbmount (0.0.18) unstable; urgency=low
 
