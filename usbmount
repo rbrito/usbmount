@@ -88,9 +88,9 @@ if [ "$1" = add ]; then
     #   FIXME: improvement: implement mounting by label (notice that labels
     #   can contain spaces, which makes things a little bit less comfortable).
     DEVINFO=$(/sbin/blkid -p $DEVNAME)
-    FSTYPE=$(echo "$DEVINFO" | sed 's/.*TYPE="\([^"]*\)".*/\1/g; s/[[:space:]]*//g;')
-    UUID=$(echo "$DEVINFO"   | sed 's/.*UUID="\([^"]*\)".*/\1/g; s/[[:space:]]*//g;')
-    USAGE=$(echo "$DEVINFO"  | sed 's/.*USAGE="\([^"]*\)".*/\1/g; s/[[:space:]]*//g;')
+    FSTYPE=$(echo "$DEVINFO" | sed 's/.*TYPE="\([^"]*\)".*/\1/g; s/[[:blank:]]*//g;')
+    UUID=$(echo "$DEVINFO"   | sed 's/.*UUID="\([^"]*\)".*/\1/g; s/[[:blank:]]*//g;')
+    USAGE=$(echo "$DEVINFO"  | sed 's/.*USAGE="\([^"]*\)".*/\1/g; s/[[:blank:]]*//g;')
 
     if ! echo $USAGE | egrep -q "(filesystem|disklabel)"; then
 	log info "$DEVNAME does not contain a filesystem or disklabel"
@@ -98,7 +98,7 @@ if [ "$1" = add ]; then
     fi
 
     # Try to use specifications in /etc/fstab first.
-    if egrep -q "[[:space:]]*$DEVNAME" /etc/fstab; then
+    if egrep -q "^[[:blank:]]*$DEVNAME" /etc/fstab; then
 	log info "executing command: mount $DEVNAME"
 	mount $DEVNAME
 
@@ -149,7 +149,7 @@ if [ "$1" = add ]; then
 		elif [ -r "/sys$DEVPATH/../device/../manufacturer" ]; then
 		    vendor="`cat \"/sys$DEVPATH/../device/../manufacturer\"`"
 		fi
-		vendor="$(echo "$vendor" | sed 's/^[[:space:]]\+//; s/[[:space:]]\+$//')"
+		vendor="$(echo "$vendor" | sed 's/^[[:blank:]]\+//; s/[[:blank:]]\+$//')"
 
 		model=
 		if [ -r "/sys$DEVPATH/device/model" ]; then
@@ -161,7 +161,7 @@ if [ "$1" = add ]; then
 		elif [ -r "/sys$DEVPATH/../device/../product" ]; then
 		    model="`cat \"/sys$DEVPATH/../device/../product\"`"
 		fi
-		model="$(echo "$model" | sed 's/^[[:space:]]\+//; s/[[:space:]]\+$//')"
+		model="$(echo "$model" | sed 's/^[[:blank:]]\+//; s/[[:blank:]]\+$//')"
 
 		# Run hook scripts; ignore errors.
 		export UM_DEVICE="$DEVNAME"
