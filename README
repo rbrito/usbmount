@@ -2,24 +2,28 @@
 USBmount
 ========
 
-The USBmount package automatically mounts USB mass storage devices
-(typically USB pen drives) when they are plugged in, and unmounts them
-when they are removed. The mountpoints (/media/usb[0-7] by default),
-filesystem types to consider, and mount options are configurable. When
-multiple devices are plugged in, the first available mountpoint is
-automatically selected. If the device provides a model name, a symbolic
-link /var/run/usbmount/MODELNAME pointing to the mountpoint is auto-
-matically created.
+The USBmount package automatically mount USB mass storage devices (e.g.,
+USB pen drives or HDs in USB enclosures) when they are plugged in.  The
+mountpoints (/media/usb[0-7] by default), filesystem types to consider,
+and mount options are configurable. When multiple devices are plugged
+in, the first available mountpoint is automatically selected.
+
+If the device plugged provides a model name, a symbolic link at
+/var/run/usbmount/MODELNAME pointing to the mountpoint is automatically
+created.  When the device is not present anymore in the system (e.g.,
+after it has been unplugged), usbmount deletes the symbolic links that
+were created.
 
 The script that does the (un)mounting is called by the udev daemon.
 Therefore, USBmount requires a 2.6 (or newer) kernel.
 
 USBmount is intended as a lightweight solution which is independent of a
 desktop environment. Users which would like an icon to appear when an
-USB device is plugged in should use the pmount and hal packages instead.
+USB device is plugged in should use other alternatives.
 
 The comments in the configuration file /etc/usbmount/usbmount.conf
 describe how to configure the package.
+
 
 Generic Comments about Flash Drives
 ===================================
@@ -121,7 +125,6 @@ the following:
 
   udevadm info -a -p $(udevadm info -q path -n /dev/sdb1)
 
-
 Hook Scripts
 ------------
 
@@ -148,3 +151,26 @@ Note that vendor and model name are no longer easily available when the
 device has been removed. If you need this information in an unmount hook
 script, write it to a file in a mount hook script and read it back in
 the unmount hook script.
+
+
+Safely unmounting filesystems
+=============================
+
+As it is not possible for the system to detect when the device should be
+unmounted (such information is only present when the device has already
+been unplugged, which is too late for some clean ups, like flushing
+unwritten buffers to disk and marking the filesystem as clean), the user
+should manually unmount the device that were automatically mounted.
+
+This situation is similar to those in graphical desktop environments
+where the user has to click on an icon and inform the system that it
+wants to remove the device from the computer.
+
+A recommended solution for this problem is to use the pumount command
+(provided by the pmount package), which acts as a wrapper around the
+regular mount command and lets regular users (i.e., not root) to unmount
+the filesystems, conveniently.
+
+Warning: carelessly removing the device/filesystem without unounting it
+first can (and does) lead to massive filesystem corruption and should
+only be performed if you know exactly what you are doing.
