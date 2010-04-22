@@ -67,8 +67,8 @@ ports, provided that the kernel has support for it (most distribution
 kernels, including the ones shipped with Debian and Ubuntu do).
 
 
-Technical Recommendations
-=========================
+Technical Considerations
+========================
 
 Control of Filesystems Mounted by USBmount
 ------------------------------------------
@@ -174,3 +174,25 @@ the filesystems, conveniently.
 Warning: carelessly removing the device/filesystem without unounting it
 first can (and does) lead to massive filesystem corruption and should
 only be performed if you know exactly what you are doing.
+
+
+The Special Case of FUSE Filesystems
+------------------------------------
+
+Many users use removeable drives with NTFS filesystems and the
+user-space filesystem NTFS-3g, since it provides more flexiblity than
+the native module present in the Linux kernel.
+
+Such users have difficulty when unmounting the filesystems, since they
+are present in the system /etc/mtab with a filesystem type of fuseblk,
+not with ntfs as one might expect.
+
+For such filesystems, it may be convenient to add fuseblk in
+/etc/usbmount/usbmount.conf's list FILESYSTEMS as well as copying the
+parameters that one would have with -fstype=ntfs in FS_MOUNTOPTIONS also
+with -fstype=fuseblk.
+
+Similar comments may apply to other FUSE-managed filesystems.
+
+
+This subsection is an adaptation of a description made by Thomas Jancar.
