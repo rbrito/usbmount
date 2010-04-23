@@ -1,37 +1,37 @@
 usbmount (0.0.17) unstable; urgency=low
 
-  * Starting with version 0.0.17, usbmount *WILL* recognize and
-    automount devices with the vfat filesystem, as those are supported
-    by the Linux kernel with the "sync" mount option since Linux
-    2.6.12. [0]
+  Starting with version 0.0.17, usbmount *WILL* recognize and automount
+  devices with the vfat filesystem, as those are supported by the Linux
+  kernel with the "sync" mount option since Linux 2.6.12. [0]
 
-  * Users should be aware that independently of the filesystem used by
-    the mass storage device, *ANY* filesystem that resides in flash
-    memory will become unreadable after some time. This unfortunate
-    situation is intrinsic to the storage medium and better quality
-    flash drives perform a "wear levelling" operation, distributing the
-    load of operations across the whole device.
+  Users should be aware that independently of the filesystem used by
+  the mass storage device, *ANY* filesystem that resides in flash
+  memory will become unreadable after some time. This unfortunate
+  situation is intrinsic to the storage medium and better quality
+  flash drives perform a "wear levelling" operation, distributing the
+  load of operations across the whole device.
 
-    Filesystems using flash memory and mounted with the sync option can
-    degrade earlier due to the fact that the sync mount option forces
-    the operating system to write data more frequently to the device
-    than if it were mounted without the sync option.
+  Filesystems using flash memory and mounted with the sync option can
+  degrade earlier due to the fact that the sync mount option forces
+  the operating system to write data more frequently to the device
+  than if it were mounted without the sync option.
 
-    So, why mount filesystems with the sync option then? The reason is
-    to keep the written data on the drive reflecting what the user
-    thinks is on the flash drive, and, more importantly, to avoid the
-    problem of the user unplugging the device before it is finished
-    receiving data that the kernel has on the memory of the computer and
-    that is meant to be written to the device.
+  So, why mount filesystems with the sync option then? The reason is
+  to keep the written data on the drive reflecting what the user
+  thinks is on the flash drive, and, more importantly, to avoid the
+  problem of the user unplugging the device before it is finished
+  receiving data that the kernel has on the memory of the computer and
+  that is meant to be written to the device.
 
-    If you don't like the sync option with your filesystems, then you
-    can remove it from the configuration file of usbmount and use your
-    devices with better performance and longer life time. *BUT* you
-    should always make sure that you use the "sync" command (on a shell)
-    to ensure that there is no writes pending for the device in
-    question, so that you don't loose any data when you unplug the
-    device from the computer.
+  If you don't like the sync option with your filesystems, then you
+  can remove it from the configuration file of usbmount and use your
+  devices with better performance and longer life time. *BUT* you
+  should always make sure that you use the "sync" command (on a shell)
+  to ensure that there is no writes pending for the device in
+  question, so that you don't loose any data when you unplug the
+  device from the computer.
 
   [0] http://git.kernel.org/?p=linux/kernel/git/torvalds/old-2.6-bkcvs.git;a=commit;h=3e261a474262b622709d4851a1f26123e61ab13c
 
  -- Rogério Brito <rbrito@ime.usp.br>  Thu, 30 Apr 2009 20:01:29 -0300
+
