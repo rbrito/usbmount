@@ -6,8 +6,8 @@ Standards-Version: 3.8.3
 Build-Depends: cdbs, debhelper (>= 5)
 Maintainer: Rogério Brito <rbrito@ime.usp.br>
 DM-Upload-Allowed: yes
-Vcs-Svn: svn://svn.debian.org/svn/usbmount/usbmount/trunk/
-Vcs-Browser: http://svn.debian.org/wsvn/usbmount
+Vcs-Git: git://git.debian.org/usbmount/usbmount.git
+Vcs-Browser: http://git.debian.org/?p=usbmount/usbmount.git
 Homepage: http://usbmount.alioth.debian.org/
 
 Package: usbmount
@@ -24,8 +24,8 @@ Description: automatically mount and unmount USB mass storage devices
  /var/run/usbmount/MODELNAME pointing to the mountpoint is automatically
  created.
  .
- The script that does the (un)mounting is called by the udev daemon.
- Therefore, USBmount requires a 2.6 (or newer) kernel.
+ The script that does the mounting is called by the udev daemon.
+ Therefore, USBmount requires a 2.6 (or newer) Linux kernel.
  .
  Firewire devices are also supported by USBmount.
  .
