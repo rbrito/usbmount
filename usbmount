@@ -102,7 +102,7 @@ if [ "$1" = add ]; then
 	log info "executing command: mount $DEVNAME"
 	mount $DEVNAME
 
-    elif grep -q $UUID /etc/fstab; then
+    elif grep -q "^[[:blank:]]*$UUID" /etc/fstab; then
         log info "executing command: mount -U $UUID"
 	mount -U $UUID
 
