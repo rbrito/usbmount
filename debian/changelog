@@ -1,3 +1,26 @@
+usbmount (0.0.20) unstable; urgency=low
+
+  * The "jidanni QA" release.
+  * [28109ae9] Update changelog in preparation for new release.
+  * [5e418982] Change character classes :space: -> :blank: and anchor
+    grep's regexp.
+  * [d60466c8] Include comments regarding unmounting the filesystems
+    safely.
+  * [48788d01] Eliminate confusing extra empty line in usbmount.conf
+    (Closes: #568959)
+  * [edd2eb4f] Describe dealing with FUSE mounted filesystems (Closes:
+    #570405)
+  * [aac8a8e2] Update the VCS-* from SVN to GIT
+  * [cee7f5fc] Convert to format 3.0 (native)
+  * [120fbcca] Reformat debian/NEWS to kill lintian warnings
+  * [072cfd6c] Update the copyright years.
+  * [e3824bb7] Don't use UUID's hiding under a comment. Closes: #576778.
+  * [ebcf8f68] Log some error conditions. Closes: #576767.
+  * [46323216] The package complies with Policy 3.8.4. No changes
+    necessary.
+
+ -- Rogério Brito <rbrito@ime.usp.br>  Sat, 24 Apr 2010 23:26:05 -0300
+
 usbmount (0.0.19.1) unstable; urgency=low
 
   * The "Oh, oh, oh" release.
