@@ -185,14 +185,20 @@ the native module present in the Linux kernel.
 
 Such users have difficulty when unmounting the filesystems, since they
 are present in the system /etc/mtab with a filesystem type of fuseblk,
-not with ntfs as one might expect.
+not with ntfs (or ntfs-3g) as one might expect.
 
-For such filesystems, it may be convenient to add fuseblk in
-/etc/usbmount/usbmount.conf's list FILESYSTEMS as well as copying the
-parameters that one would have with -fstype=ntfs in FS_MOUNTOPTIONS also
-with -fstype=fuseblk.
+For such filesystems, it may be convenient to:
 
-Similar comments may apply to other FUSE-managed filesystems.
+* add "ntfs-3g" to /etc/usbmount/usbmount.conf's variable FILESYSTEMS
+  (for mounting purposes)
+* add "fuseblk" to /etc/usb/usbmount.conf's variable FILESYSTEMS
+  (for unmounting purposes).
+
+Similar comments may apply to other FUSE-managed filesystems.  In general,
+if you need a FUSE filesystem, it may be a good idea to add the name of
+that filesystem to the FILESYSTEMS variable as well as making sure that the
+special "fuseblk" filesystem is contained in that list.
 
 
-This subsection is an adaptation of a description made by Thomas Jancar.
+This subsection is an adaptation of descriptions made by Thomas Jancar
+and Jan Schulz.
