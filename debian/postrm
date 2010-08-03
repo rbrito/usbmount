@@ -10,8 +10,8 @@ if test "$1" = remove || test "$1" = abort-install; then
     done
 fi
 
-# If the package is purged, remove /etc/dev.d/block/usbmount.dev and the
-# /etc/udev/rules.d/z60_usbmount.rules symlink if they exist.
+# During purge, remove the /etc/udev/rules.d/z60_usbmount.rules symlink if it
+# exists.
 if test "$1" = purge; then
     if test -h /etc/udev/rules.d/z60_usbmount.rules; then
 	rm -f /etc/udev/rules.d/z60_usbmount.rules
