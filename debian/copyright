@@ -2,7 +2,7 @@ Author: Martin Dickopp <martin@zero-based.org>
 Upstream-Name: usbmount
 Upstream-Maintainer: Rogério Brito <rbrito@ime.usp.br>
 Upstream-Source: http://usbmount.alioth.debian.org/
-Download: svn://svn.debian.org/svn/usbmount/trunk/usbmount
+Download: git://git.debian.org/usbmount/usbmount.git
 
 Files: *
 Copyright: © 2004, 2005, 2006, 2007 Martin Dickopp <martin@zero-based.org>
