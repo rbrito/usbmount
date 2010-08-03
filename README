@@ -202,3 +202,20 @@ special "fuseblk" filesystem is contained in that list.
 
 This subsection is an adaptation of descriptions made by Thomas Jancar
 and Jan Schulz.
+
+
+Remounting filesystems without physical removal
+===============================================
+
+usbmount operates (read: "mounts or unmounts filesystems") based on events
+issued by the Linux kernel/udev. As a consequence, if you happen to unmount a
+filesystem and want to mount it again, you have basically two choices:
+
+1 - unplug and plug the device, which may not be desired, for a number of
+    reasons.
+2 - make the kernel/udev generate another event so that usbmount knows that it
+    has some work to do.
+
+The latter can be accomplished by the use of the command "udevadm trigger"
+(most likely needed to be run with superuser privileges).  This is also a way
+to get a particular filesystem mounted after a coldboot.
