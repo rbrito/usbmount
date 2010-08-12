@@ -216,6 +216,11 @@ filesystem and want to mount it again, you have basically two choices:
 2 - make the kernel/udev generate another event so that usbmount knows that it
     has some work to do.
 
-The latter can be accomplished by the use of the command "udevadm trigger"
-(most likely needed to be run with superuser privileges).  This is also a way
-to get a particular filesystem mounted after a coldboot.
+The latter can be accomplished by the use of the command
+
+	udevadm trigger --action=add /dev/sdd2
+
+where /dev/sdd2 should be substituted with the proper partition. This
+command is likely needed to be run with superuser privileges.
+Triggering kernel events is also a way to get a particular filesystem
+mounted after a coldboot.
