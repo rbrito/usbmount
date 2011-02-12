@@ -3,7 +3,7 @@ Source: usbmount
 Section: admin
 Priority: extra
 Standards-Version: 3.9.1
-Build-Depends: debhelper (>= 7)
+Build-Depends: debhelper (>= 8)
 Maintainer: Rogério Brito <rbrito@ime.usp.br>
 DM-Upload-Allowed: yes
 Vcs-Git: git://git.debian.org/usbmount/usbmount.git
