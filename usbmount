@@ -100,11 +100,11 @@ if [ "$1" = add ]; then
     # Try to use specifications in /etc/fstab first.
     if egrep -q "^[[:blank:]]*$DEVNAME" /etc/fstab; then
 	log info "executing command: mount $DEVNAME"
-	mount $DEVNAME || log err "mount by DEVNAME wan't successful; return code $?"
+	mount $DEVNAME || log err "mount by DEVNAME with $DEVNAME wan't successful; return code $?"
 
     elif grep -q "^[[:blank:]]*UUID=$UUID" /etc/fstab; then
         log info "executing command: mount -U $UUID"
-	mount -U $UUID || log err "mount by UUID wan't successful; return code $?"
+	mount -U $UUID || log err "mount by UUID with $UUID wan't successful; return code $?"
 
     else
 	log debug "$DEVNAME contains filesystem type $FSTYPE"
