@@ -1,3 +1,23 @@
+usbmount (0.0.21) unstable; urgency=low
+
+  * [e499931] Add better documentation to the configuration file.
+  * [0884ff6] Transition from cdbs to dh(7).
+  * [ce9dc83] Make mounting by UUID more robust. Thanks to Jidanni.
+    Closes: #587066.
+  * [e57343e] Make some log messages slightly more descriptive
+  * [b5549ec] Document better the situation with FUSE filesystems.
+    Closes: #587311.
+  * [06559af] Include description on how to remount filesystems. Closes:
+    #568962.
+  * [c6317b7] Verify that the package satisfies the Debian Policy
+    v3.9.1.
+  * [81e9c09] Point the source of the program to the git repository.
+  * [06f365d] Put the rules file under /lib/udev/rules.d.
+  * [1d0a16f] Remove some of the symlink dance
+  * [7fa5d2a] Update comment to make it reflect what the code says.
+
+ -- Rogério Brito <rbrito@ime.usp.br>  Tue, 03 Aug 2010 12:14:56 -0400
+
 usbmount (0.0.20) unstable; urgency=low
 
   * The "jidanni QA" release.
