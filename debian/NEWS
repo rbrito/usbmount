@@ -28,7 +28,7 @@ usbmount (0.0.17) unstable; urgency=low
   devices with better performance and longer life time. *BUT* you
   should always make sure that you use the "sync" command (on a shell)
   to ensure that there is no writes pending for the device in
-  question, so that you don't loose any data when you unplug the
+  question, so that you don't lose any data when you unplug the
   device from the computer.
 
   [0] http://git.kernel.org/?p=linux/kernel/git/torvalds/old-2.6-bkcvs.git;a=commit;h=3e261a474262b622709d4851a1f26123e61ab13c
