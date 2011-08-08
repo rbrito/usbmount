@@ -15,8 +15,10 @@ usbmount (0.0.22) unstable; urgency=low
     Closes: #636991.
   * [879beb6] debian/control: Use wrap-and-sort to normalize the fields.
   * [12d0f12] debian/control: Update Standard-Version to 3.9.2 (no changes).
-  * [e73cf7a] usbmount: Fix spelling errors. Closes: #630317. Tks Yuri D'Elia.
-  * [8899b3f] debian/NEWS: Fix spelling errors. Closes: #637113. Tks John Foerch.
+  * [e73cf7a] usbmount: Fix spelling errors. Tks Yuri D'Elia.
+    Closes: #630317.
+  * [8899b3f] debian/NEWS: Fix spelling errors. Tks John Foerch.
+    Closes: #637113.
 
  -- Rogério Brito <rbrito@ime.usp.br>  Mon, 08 Aug 2011 13:02:25 -0300
 
