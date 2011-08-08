@@ -1,7 +1,7 @@
 Source: usbmount
 Section: admin
 Priority: extra
-Standards-Version: 3.9.1
+Standards-Version: 3.9.2
 Build-Depends:
  debhelper (>= 8)
 Maintainer: Rogério Brito <rbrito@ime.usp.br>
