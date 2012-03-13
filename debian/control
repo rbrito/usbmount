@@ -21,22 +21,28 @@ Depends:
  ${misc:Depends}
 Recommends:
  pmount
-Description: automatically mount and unmount USB mass storage devices
- This package automatically mounts USB mass storage devices (typically
- USB pens) when they are plugged in, and unmounts them when they are
- removed. The mountpoints (/media/usb[0-7] by default), filesystem types
- to consider, and mount options are configurable. When multiple devices
- are plugged in, the first available mountpoint is automatically
- selected. If the device provides a model name, a symbolic link
- /var/run/usbmount/MODELNAME pointing to the mountpoint is automatically
- created.
+Description: automatically mount removable storage devices
+ This package automatically mounts USB mass storage devices (typically USB
+ pendrives) when they are plugged in. The mountpoints (/media/usb[0-7] by
+ default), filesystem types to consider, and mount options are
+ configurable. When multiple devices are plugged in, the first available
+ mountpoint is automatically selected. If the device provides a model name,
+ a symbolic link /var/run/usbmount/MODELNAME pointing to the mountpoint is
+ automatically created.
  .
- The script that does the mounting is called by the udev daemon.
- Therefore, USBmount requires a 2.6 (or newer) Linux kernel.
+ Despite the name, any removable device (like Firewire drives) are also
+ supported by USBmount.
  .
- Firewire devices are also supported by USBmount.
+ USBmount is intended as a lightweight, minimalistic solution which is
+ independent of a desktop environment.
  .
- USBmount is intended as a lightweight solution which is independent of
- a desktop environment. Users which would like an icon to appear when an
- USB device is plugged in should use the pmount and hal packages
- instead.
+ NOTE: The package usbmount is not meant to be used by people using a
+ regular desktop environment (like KDE, or GNOME, among others).  The
+ Desktop Environments already provide a way for users to accomplish the task
+ of automatically mounting filesystems and problems with this "auto
+ mounting" have no relation to the package usbmount.
+ .
+ The usbmount package is only meant for use with minimalistic systems (or
+ for embedded systems) and should only be installed under such
+ circumstances: problems mounting USB sticks with a regular desktop
+ environment are not bugs with the package automount.
