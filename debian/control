@@ -21,6 +21,8 @@ Depends:
  ${misc:Depends}
 Recommends:
  pmount
+Suggests:
+ ntfs-3g
 Description: automatically mount removable storage devices
  This package automatically mounts USB mass storage devices (typically USB
  pendrives) when they are plugged in. The mountpoints (/media/usb[0-7] by
