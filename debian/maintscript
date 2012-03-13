@@ -1,0 +1,2 @@
+rm_conffile /etc/udev/usbmount.rules 0.0.20
+rm_conffile /etc/udev/rules.d/z60_usbmount.rules 0.0.12
