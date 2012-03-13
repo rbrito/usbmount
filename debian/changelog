@@ -1,3 +1,9 @@
+usbmount (0.0.23) unstable; urgency=low
+
+  *
+
+ -- Rogério Brito <rbrito@ime.usp.br>  Tue, 13 Mar 2012 06:20:49 -0300
+
 usbmount (0.0.22) unstable; urgency=low
 
   * [f6f3d8d] Add very important README/documentation file.
