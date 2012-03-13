@@ -3,7 +3,7 @@ Section: admin
 Priority: extra
 Standards-Version: 3.9.2
 Build-Depends:
- debhelper (>= 8)
+ debhelper (>= 8.1.0~)
 Maintainer: Rogério Brito <rbrito@ime.usp.br>
 DM-Upload-Allowed: yes
 Vcs-Git: git://git.debian.org/usbmount/usbmount.git
@@ -12,6 +12,8 @@ Homepage: http://usbmount.alioth.debian.org/
 
 Package: usbmount
 Architecture: all
+Pre-Depends:
+ dpkg (>= 1.15.7.2~)
 Depends:
  lockfile-progs,
  udev,
