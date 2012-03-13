@@ -1,8 +1,15 @@
-usbmount (0.0.23) unstable; urgency=low
+usbmount (0.0.23~1.gbpfaef99) UNRELEASED; urgency=low
 
-  *
+  ** SNAPSHOT build @faef99741d853acbc6fea79583ab6228a8cd2eac **
 
- -- Rogério Brito <rbrito@ime.usp.br>  Tue, 13 Mar 2012 06:20:49 -0300
+  * [7034221] Remove dangling symlink and obsolete conffiles.
+    Thanks to jrplists and Ron Murray for reporting (Closes: #658318)
+  * [3e7fce5] Mark me as upstream-contact, as Martin is not active anymore.
+  * [f49fa0a] Update copyright years.
+  * [3e5002f] Add {Build,Pre}-Depends for the use of maintscript.
+  * [6b7b1c3] Fix debian/copyright file according to Copyright Format 1.0.
+
+ -- Rogério Brito <rbrito@ime.usp.br>  Tue, 13 Mar 2012 06:25:24 -0300
 
 usbmount (0.0.22) unstable; urgency=low
 
