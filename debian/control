@@ -3,7 +3,7 @@ Section: admin
 Priority: extra
 Standards-Version: 3.9.2
 Build-Depends:
- debhelper (>= 8.1.0~)
+ debhelper (>= 9)
 Maintainer: Rogério Brito <rbrito@ime.usp.br>
 Vcs-Browser: https://anonscm.debian.org/cgit/usbmount/usbmount.git
 Vcs-Git: git://anonscm.debian.org/usbmount/usbmount.git
