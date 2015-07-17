@@ -160,11 +160,11 @@ where the user has to click on an icon and inform the system that it
 wants to remove the device from the computer.
 
 A recommended solution for this problem is to use the `pumount` command
-(provided by the pmount package), which acts as a wrapper around the
+(provided by the `pmount` package), which acts as a wrapper around the
 regular mount command and lets regular users (i.e., not root) to unmount
 the filesystems, conveniently.
 
-Warning: carelessly removing the device/filesystem without unmounting it
+**Warning:** carelessly removing the device/filesystem without unmounting it
 first can (and does) lead to massive filesystem corruption and should
 only be performed if you know exactly what you are doing.
 
@@ -177,7 +177,7 @@ the native module present in the Linux kernel.
 
 Such users have difficulty when unmounting the filesystems, since they
 are present in the system `/etc/mtab` with a filesystem type of `fuseblk`,
-not with ntfs (or ntfs-3g) as one might expect.
+not with `ntfs` (or `ntfs-3g`) as one might expect.
 
 For such filesystems, it may be convenient to:
 
