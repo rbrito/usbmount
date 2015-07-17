@@ -159,7 +159,7 @@ This situation is similar to those in graphical desktop environments
 where the user has to click on an icon and inform the system that it
 wants to remove the device from the computer.
 
-A recommended solution for this problem is to use the pumount command
+A recommended solution for this problem is to use the `pumount` command
 (provided by the pmount package), which acts as a wrapper around the
 regular mount command and lets regular users (i.e., not root) to unmount
 the filesystems, conveniently.
