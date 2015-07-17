@@ -164,15 +164,15 @@ A recommended solution for this problem is to use the `pumount` command
 regular mount command and lets regular users (i.e., not root) to unmount
 the filesystems, conveniently.
 
-Warning: carelessly removing the device/filesystem without unounting it
+Warning: carelessly removing the device/filesystem without unmounting it
 first can (and does) lead to massive filesystem corruption and should
 only be performed if you know exactly what you are doing.
 
 
 ## The Special Case of FUSE Filesystems
 
-Many users use removeable drives with NTFS filesystems and the
-user-space filesystem NTFS-3g, since it provides more flexiblity than
+Many users use removable drives with NTFS filesystems and the
+user-space filesystem NTFS-3g, since it provides more flexibility than
 the native module present in the Linux kernel.
 
 Such users have difficulty when unmounting the filesystems, since they
