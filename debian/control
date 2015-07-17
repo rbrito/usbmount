@@ -5,8 +5,8 @@ Standards-Version: 3.9.2
 Build-Depends:
  debhelper (>= 8.1.0~)
 Maintainer: Rogério Brito <rbrito@ime.usp.br>
-Vcs-Git: git://git.debian.org/usbmount/usbmount.git
-Vcs-Browser: http://git.debian.org/?p=usbmount/usbmount.git
+Vcs-Browser: https://anonscm.debian.org/cgit/usbmount/usbmount.git
+Vcs-Git: git://anonscm.debian.org/usbmount/usbmount.git
 Homepage: http://usbmount.alioth.debian.org/
 
 Package: usbmount
