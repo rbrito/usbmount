@@ -131,8 +131,8 @@ and udev systems):
 
     Variable     | Description
 -----------------|-------------
-`UM_DEVICE`      | filename of the device node
-`UM_MOUNTPOINT`  | mointpoint
+`UM_DEVICE`      | file name of the device node
+`UM_MOUNTPOINT`  | mountpoint
 `UM_FILESYSTEM`  | filesystem type
 `UM_MOUNTOPTIONS`| mount options that have been passed to the mount command
 `UM_VENDOR`      | vendor of the device (empty if unknown)
