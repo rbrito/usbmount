@@ -1,6 +1,6 @@
-usbmount (0.0.23~2.gbp1ba9e1) UNRELEASED; urgency=low
+usbmount (0.0.23~3.gbp89a09b) UNRELEASED; urgency=low
 
-  ** SNAPSHOT build @1ba9e1a39106176a3473868ede422f7812c49537 **
+  ** SNAPSHOT build @89a09b863cbb07d95e1ffd01f2f026de055721a9 **
 
   * [7034221] Remove dangling symlink and obsolete conffiles.
     Thanks to jrplists and Ron Murray for reporting (Closes: #658318)
@@ -11,6 +11,21 @@ usbmount (0.0.23~2.gbp1ba9e1) UNRELEASED; urgency=low
   * Rewrite both short and long descriptions of the package.
   * Add ntfs-3g as a Suggests.
     Thanks to Shahar Or for the suggestion (LP: #930371)
+  * README: Add some markdown markup.
+  * README: Rename to add .md extension.
+  * README: Try to improve the markup.
+  * README: Fix spelling.
+  * README: Add missing markup.
+  * README: More spelling fixes.
+  * README: Add more markup.
+  * README: Fix spelling.
+  * debian/docs: Change name of the README file.
+  * debian/control: Remove deprecated 'DMUA: yes' field.
+  * debian/control: Use cgit URLs on alioth.
+  * debian/control: Remove obsolete (Pre-)Dependencies on dpkg and util-linux.
+  * debian/copyright: Update the source field.
+  * debian/copyright: Update my copyright years.
+  * debian/{compat,control}: Update debhelper version to 9.
 
  -- Rogério Brito <rbrito@ime.usp.br>  Tue, 13 Mar 2012 08:00:55 -0300
 
