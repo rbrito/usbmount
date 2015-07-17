@@ -35,7 +35,7 @@ the whole device. [*]
 Filesystems using flash memory and mounted with the `sync` option can
 degrade earlier due to the fact that the sync mount option forces the
 operating system to write data more frequently to the device than if it
-were mounted without the sync option.
+were mounted without the `sync` option.
 
 So, why mount filesystems with the `sync` option then? The reason is to
 keep the written data on the drive reflecting what the user thinks is on
@@ -44,9 +44,9 @@ unplugging the device before it is finished receiving data that the
 kernel has on the memory of the computer and that is meant to be written
 to the device.
 
-If you don't like the sync option with your filesystems, then you can
+If you don't like the `sync` option with your filesystems, then you can
 remove it from the configuration file of usbmount and use your devices
-with better performance and longer life time. *BUT* you should always
+with better performance and longer life time. **BUT** you should always
 make sure that you use the `sync` command (on a shell) to ensure that
 there is no writes pending for the device in question, so that you don't
 loose any data when you unplug the device from the computer.
@@ -70,7 +70,7 @@ kernels, including the ones shipped with Debian and Ubuntu do).
 
 You can choose which filesystems you want usbmount to automatically
 handle by listing the filesystem types provided by the operating system
-in the configuration variable FILESYSTEMS.
+in the configuration variable `FILESYSTEMS`.
 
 ### Recommendations for vfat Filesystems
 
@@ -129,12 +129,14 @@ The following environment variables are available to the scripts (in
 addition to those set in `/etc/usbmount/usbmount.conf` and by the hotplug
 and udev systems):
 
-UM_DEVICE       - filename of the device node
-UM_MOUNTPOINT   - mointpoint
-UM_FILESYSTEM   - filesystem type
-UM_MOUNTOPTIONS - mount options that have been passed to the mount command
-UM_VENDOR       - vendor of the device (empty if unknown)
-UM_MODEL        - model name of the device (empty if unknown)
+    Variable     | Description
+-----------------|-------------
+`UM_DEVICE`      | filename of the device node
+`UM_MOUNTPOINT`  | mointpoint
+`UM_FILESYSTEM`  | filesystem type
+`UM_MOUNTOPTIONS`| mount options that have been passed to the mount command
+`UM_VENDOR`      | vendor of the device (empty if unknown)
+`UM_MODEL`       | model name of the device (empty if unknown)
 
 Likewise, the command `run-parts /etc/usbmount/umount.d` is executed
 after a device or partition has been unmounted. The scripts can make use
