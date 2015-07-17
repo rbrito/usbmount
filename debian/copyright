@@ -1,7 +1,7 @@
 Format: http://www.debian.org/doc/packaging-manuals/copyright-format/1.0/
 Upstream-Name: usbmount
 Upstream-Contact: Rogério Theodoro de Brito <rbrito@ime.usp.br>
-Source: git://git.debian.org/usbmount/usbmount.git
+Source: git://anonscm.debian.org/usbmount/usbmount.git
 
 Files: *
 Copyright: 2004-2007, Martin Dickopp <martin@zero-based.org>
