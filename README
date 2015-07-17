@@ -1,15 +1,13 @@
-========
-USBmount
-========
+# USBmount
 
 The USBmount package automatically mount USB mass storage devices (e.g.,
 USB pen drives or HDs in USB enclosures) when they are plugged in.  The
-mountpoints (/media/usb[0-7] by default), filesystem types to consider,
+mountpoints (`/media/usb[0-7]` by default), filesystem types to consider,
 and mount options are configurable. When multiple devices are plugged
 in, the first available mountpoint is automatically selected.
 
 If the device plugged provides a model name, a symbolic link at
-/var/run/usbmount/MODELNAME pointing to the mountpoint is automatically
+`/var/run/usbmount/MODELNAME` pointing to the mountpoint is automatically
 created.  When the device is not present anymore in the system (e.g.,
 after it has been unplugged), usbmount deletes the symbolic links that
 were created.
@@ -21,12 +19,11 @@ USBmount is intended as a lightweight solution which is independent of a
 desktop environment. Users which would like an icon to appear when an
 USB device is plugged in should use other alternatives.
 
-The comments in the configuration file /etc/usbmount/usbmount.conf
+The comments in the configuration file `/etc/usbmount/usbmount.conf`
 describe how to configure the package.
 
 
-Generic Comments about Flash Drives
-===================================
+## Generic Comments about Flash Drives
 
 Users should be aware that, independently of the filesystem used by the
 mass storage device, *ANY* filesystem that resides in flash memory will
@@ -35,12 +32,12 @@ intrinsic to the storage medium and better quality flash drives perform
 a "wear levelling" operation, distributing the load of operations across
 the whole device. [*]
 
-Filesystems using flash memory and mounted with the "sync" option can
+Filesystems using flash memory and mounted with the `sync` option can
 degrade earlier due to the fact that the sync mount option forces the
 operating system to write data more frequently to the device than if it
 were mounted without the sync option.
 
-So, why mount filesystems with the sync option then? The reason is to
+So, why mount filesystems with the `sync` option then? The reason is to
 keep the written data on the drive reflecting what the user thinks is on
 the flash drive, and, more importantly, to avoid the problem of the user
 unplugging the device before it is finished receiving data that the
@@ -50,7 +47,7 @@ to the device.
 If you don't like the sync option with your filesystems, then you can
 remove it from the configuration file of usbmount and use your devices
 with better performance and longer life time. *BUT* you should always
-make sure that you use the "sync" command (on a shell) to ensure that
+make sure that you use the `sync` command (on a shell) to ensure that
 there is no writes pending for the device in question, so that you don't
 loose any data when you unplug the device from the computer.
 
@@ -67,18 +64,15 @@ ports, provided that the kernel has support for it (most distribution
 kernels, including the ones shipped with Debian and Ubuntu do).
 
 
-Technical Considerations
-========================
+## Technical Considerations
 
-Control of Filesystems Mounted by USBmount
-------------------------------------------
+### Control of Filesystems Mounted by USBmount
 
 You can choose which filesystems you want usbmount to automatically
 handle by listing the filesystem types provided by the operating system
 in the configuration variable FILESYSTEMS.
 
-Recommendations for vfat Filesystems
-------------------------------------
+### Recommendations for vfat Filesystems
 
 The vfat filesystem is one of the most commonly used filesystems in pen
 drives. Unfortunately, due to its age, it is very poor regarding
@@ -93,14 +87,13 @@ For a more flexible configuration, some useful options for vfat
 filesystems are to specify explicitly who the user and permissions are.
 Please, read the manpage of the mount command to get details.
 
-An example is to specify "-fstype=vfat,gid=floppy,dmask=0007,fmask=0117"
-in the FS_MOUNTOPTIONS variable of the configuration file. The
+An example is to specify `-fstype=vfat,gid=floppy,dmask=0007,fmask=0117`
+in the `FS_MOUNTOPTIONS` variable of the configuration file. The
 particular options specified in the example mean that members of the
 floppy group can read from and write to the medium, but nobody else can
 access it.
 
-Troubleshooting USBmount
-------------------------
+## Troubleshooting USBmount
 
 No software is free of problems and the situation isn't different with
 USBmount. To ease the troubleshooting of problems, you may try to check
@@ -109,11 +102,11 @@ the following:
 * Do you have HAL running? Any GNOME or KDE daemon automounting devices?
 
 * Let's suppose that the partition containing the filesystem that you
-  want USBmount to automatically handle is /dev/sda1 (your case may,
+  want USBmount to automatically handle is `/dev/sda1` (your case may,
   quite possibly, vary). Then, check the result of the following
   command:
 
-  udevadm test --action=add /sys/class/block/sda1
+        udevadm test --action=add /sys/class/block/sda1
 
   The command above just gives diagnostics of what USBmount would do
   with the device, but it doesn't actually mount or interfere with the
@@ -123,18 +116,17 @@ the following:
 * Under the same assumptions as the above, another good diagnostic tool
   is the following:
 
-  udevadm info -a -p $(udevadm info -q path -n /dev/sdb1)
+        udevadm info -a -p $(udevadm info -q path -n /dev/sdb1)
 
-Hook Scripts
-------------
+# Hook Scripts
 
-After a device or partition has been mounted, the command 'run-parts
-/etc/usbmount/mount.d' is executed. This runs all scripts in
-/etc/usbmount/mount.d which adhere to a certain naming convention; see
-the run-parts manual page for details.
+After a device or partition has been mounted, the command `run-parts
+/etc/usbmount/mount.d` is executed. This runs all scripts in
+`/etc/usbmount/mount.d` which adhere to a certain naming convention; see
+the `run-parts` manual page for details.
 
 The following environment variables are available to the scripts (in
-addition to those set in /etc/usbmount/usbmount.conf and by the hotplug
+addition to those set in `/etc/usbmount/usbmount.conf` and by the hotplug
 and udev systems):
 
 UM_DEVICE       - filename of the device node
@@ -144,17 +136,16 @@ UM_MOUNTOPTIONS - mount options that have been passed to the mount command
 UM_VENDOR       - vendor of the device (empty if unknown)
 UM_MODEL        - model name of the device (empty if unknown)
 
-Likewise, the command 'run-parts /etc/usbmount/umount.d' is executed
+Likewise, the command `run-parts /etc/usbmount/umount.d` is executed
 after a device or partition has been unmounted. The scripts can make use
-of the environment variables UM_DEVICE, UM_MOUNTPOINT and UM_FILESYSTEM.
+of the environment variables `UM_DEVICE`, `UM_MOUNTPOINT` and `UM_FILESYSTEM`.
 Note that vendor and model name are no longer easily available when the
 device has been removed. If you need this information in an unmount hook
 script, write it to a file in a mount hook script and read it back in
 the unmount hook script.
 
 
-Safely unmounting filesystems
-=============================
+## Safely unmounting filesystems
 
 As it is not possible for the system to detect when the device should be
 unmounted (such information is only present when the device has already
@@ -176,36 +167,34 @@ first can (and does) lead to massive filesystem corruption and should
 only be performed if you know exactly what you are doing.
 
 
-The Special Case of FUSE Filesystems
-------------------------------------
+## The Special Case of FUSE Filesystems
 
 Many users use removeable drives with NTFS filesystems and the
 user-space filesystem NTFS-3g, since it provides more flexiblity than
 the native module present in the Linux kernel.
 
 Such users have difficulty when unmounting the filesystems, since they
-are present in the system /etc/mtab with a filesystem type of fuseblk,
+are present in the system `/etc/mtab` with a filesystem type of `fuseblk`,
 not with ntfs (or ntfs-3g) as one might expect.
 
 For such filesystems, it may be convenient to:
 
-* add "ntfs-3g" to /etc/usbmount/usbmount.conf's variable FILESYSTEMS
+* add `ntfs-3g` to `/etc/usbmount/usbmount.conf`'s variable `FILESYSTEMS`
   (for mounting purposes)
-* add "fuseblk" to /etc/usb/usbmount.conf's variable FILESYSTEMS
+* add `fuseblk` to `/etc/usb/usbmount.conf`'s variable `FILESYSTEMS`
   (for unmounting purposes).
 
 Similar comments may apply to other FUSE-managed filesystems.  In general,
 if you need a FUSE filesystem, it may be a good idea to add the name of
-that filesystem to the FILESYSTEMS variable as well as making sure that the
-special "fuseblk" filesystem is contained in that list.
+that filesystem to the `FILESYSTEMS` variable as well as making sure that the
+special `fuseblk` filesystem is contained in that list.
 
 
 This subsection is an adaptation of descriptions made by Thomas Jancar
 and Jan Schulz.
 
 
-Remounting filesystems without physical removal
-===============================================
+## Remounting filesystems without physical removal
 
 usbmount operates (read: "mounts or unmounts filesystems") based on events
 issued by the Linux kernel/udev. As a consequence, if you happen to unmount a
@@ -220,7 +209,7 @@ The latter can be accomplished by the use of the command
 
 	udevadm trigger --action=add /dev/sdd2
 
-where /dev/sdd2 should be substituted with the proper partition. This
+where `/dev/sdd2` should be substituted with the proper partition. This
 command is likely needed to be run with superuser privileges.
 Triggering kernel events is also a way to get a particular filesystem
 mounted after a coldboot.
