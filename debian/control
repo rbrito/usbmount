@@ -11,12 +11,9 @@ Homepage: http://usbmount.alioth.debian.org/
 
 Package: usbmount
 Architecture: all
-Pre-Depends:
- dpkg (>= 1.15.7.2~)
 Depends:
  lockfile-progs,
  udev,
- util-linux (>> 2.16),
  ${misc:Depends}
 Recommends:
  pmount
