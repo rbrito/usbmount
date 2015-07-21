@@ -1,6 +1,6 @@
 # USBmount
 
-The USBmount package automatically mount USB mass storage devices (e.g.,
+The USBmount package automatically mounts USB mass storage devices (e.g.,
 USB pen drives or HDs in USB enclosures) when they are plugged in.  The
 mountpoints (`/media/usb[0-7]` by default), filesystem types to consider,
 and mount options are configurable. When multiple devices are plugged
@@ -12,7 +12,7 @@ created.  When the device is not present anymore in the system (e.g.,
 after it has been unplugged), usbmount deletes the symbolic links that
 were created.
 
-The script that does the (un)mounting is called by the udev daemon.
+The script that does the (un)mounting is called by the `udev` daemon.
 Therefore, USBmount requires a 2.6 (or newer) kernel.
 
 USBmount is intended as a lightweight solution which is independent of a
