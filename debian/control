@@ -7,7 +7,7 @@ Build-Depends:
 Maintainer: Rogério Brito <rbrito@ime.usp.br>
 Vcs-Browser: https://anonscm.debian.org/cgit/usbmount/usbmount.git
 Vcs-Git: git://anonscm.debian.org/usbmount/usbmount.git
-Homepage: http://usbmount.alioth.debian.org/
+Homepage: http://github.com/rbrito/usbmount
 
 Package: usbmount
 Architecture: all
