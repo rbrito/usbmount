@@ -28,7 +28,7 @@ Description: automatically mount removable storage devices
  a symbolic link /var/run/usbmount/MODELNAME pointing to the mountpoint is
  automatically created.
  .
- Despite the name, any removable device (like Firewire drives) are also
+ Despite the name, any removable device (like Firewire drives) is also
  supported by USBmount.
  .
  USBmount is intended as a lightweight, minimalistic solution which is
