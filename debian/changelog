@@ -1,3 +1,9 @@
+usbmount (0.0.24) unstable; urgency=medium
+
+  * added systemd service and adjusted udev rules based on https://bugs.debian.org/cgi-bin/bugreport.cgi?bug=774149#177
+
+ -- Jools Wills <buzz@exotica.org.uk>  Fri, 05 Feb 2016 09:55:16 +0000
+
 usbmount (0.0.23~3.gbp89a09b) UNRELEASED; urgency=low
 
   ** SNAPSHOT build @89a09b863cbb07d95e1ffd01f2f026de055721a9 **
