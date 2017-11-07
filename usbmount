@@ -84,6 +84,10 @@ if [ "$1" = add ]; then
     trap '( lockfile-remove /var/run/usbmount/.mount )' 0
     log debug "acquired lock /var/run/usbmount/.mount.lock"
 
+    # Query udev for the expected device information (as we are now running in
+    # a service's context and the env variables have been lost)
+    eval $(udevadm info --query=env --export "$DEVNAME" | grep -v '^[^=]*\..*=')
+
     # Grab device information from device and "divide it"
     #   FIXME: improvement: implement mounting by label (notice that labels
     #   can contain spaces, which makes things a little bit less comfortable).

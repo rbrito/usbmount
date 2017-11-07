@@ -5,7 +5,7 @@ After=%i.device
 [Service]
 Type=oneshot
 TimeoutStartSec=0
-Environment=DEVNAME=%I
-ExecStart=/bin/sh -ca 'eval $(udevadm info --query=env --export "/$DEVNAME"); /usr/share/usbmount/usbmount add'
-ExecStop=/bin/sh -ca 'DEVNAME="/$DEVNAME"; /usr/share/usbmount/usbmount remove'
+Environment=DEVNAME=/%I
+ExecStart=/usr/share/usbmount/usbmount add
+ExecStop=/usr/share/usbmount/usbmount remove
 RemainAfterExit=yes
