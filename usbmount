@@ -94,7 +94,7 @@ if [ "$1" = add ]; then
 
     if ! echo $USAGE | egrep -q "(filesystem|disklabel)"; then
 	log info "$DEVNAME does not contain a filesystem or disklabel"
-	exit 1
+	exit 0
     fi
 
     # Try to use specifications in /etc/fstab first.
