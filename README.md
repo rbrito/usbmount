@@ -215,3 +215,13 @@ where `/dev/sdd2` should be substituted with the proper partition. This
 command is likely needed to be run with superuser privileges.
 Triggering kernel events is also a way to get a particular filesystem
 mounted after a cold boot.
+
+## Building the package
+
+```
+# Install dependencies
+sudo apt-get update && sudo apt-get install -y debhelper
+
+# Build
+sudo dpkg-buildpackage -us -uc -b
+```

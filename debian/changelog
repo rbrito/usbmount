@@ -1,3 +1,9 @@
+usbmount (0.0.24) unstable; urgency=medium
+
+  * Use systemd to manage [dis]mounting (based on https://bugs.debian.org/cgi-bin/bugreport.cgi?bug=774149#177)
+
+ -- Mathieu Letendre-Jauniaux <mathieulj@gmail.com>  Tue, 07 Nov 2017 12:01:00 +0000
+
 usbmount (0.0.23~3.gbp89a09b) UNRELEASED; urgency=low
 
   ** SNAPSHOT build @89a09b863cbb07d95e1ffd01f2f026de055721a9 **
