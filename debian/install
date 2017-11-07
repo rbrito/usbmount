@@ -3,4 +3,3 @@
 usbmount usr/share/usbmount
 usbmount.conf etc/usbmount
 90-usbmount.rules lib/udev/rules.d
-systemd-udevd.service etc/systemd/system/
