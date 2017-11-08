@@ -1,0 +1,11 @@
+[Unit]
+BindsTo=%i.device
+After=%i.device
+
+[Service]
+Type=oneshot
+TimeoutStartSec=0
+Environment=DEVNAME=/%I
+ExecStart=/usr/share/usbmount/usbmount add
+ExecStop=/usr/share/usbmount/usbmount remove
+RemainAfterExit=yes

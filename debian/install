@@ -2,5 +2,5 @@
 00_remove_model_symlink etc/usbmount/umount.d
 usbmount usr/share/usbmount
 usbmount.conf etc/usbmount
-usbmount.rules lib/udev/rules.d
-systemd-udevd.service etc/systemd/system/
+90-usbmount.rules lib/udev/rules.d
+usbmount@.service lib/systemd/system
