@@ -129,14 +129,14 @@ The following environment variables are available to the scripts (in
 addition to those set in `/etc/usbmount/usbmount.conf` and by the hotplug
 and udev systems):
 
-    Variable     | Description
------------------|-------------
-`UM_DEVICE`      | file name of the device node
-`UM_MOUNTPOINT`  | mountpoint
-`UM_FILESYSTEM`  | filesystem type
-`UM_MOUNTOPTIONS`| mount options that have been passed to the mount command
-`UM_VENDOR`      | vendor of the device (empty if unknown)
-`UM_MODEL`       | model name of the device (empty if unknown)
+|    Variable     | Description                                              |
+|-----------------|----------------------------------------------------------|
+|`UM_DEVICE`      | file name of the device node                             |
+|`UM_MOUNTPOINT`  | mountpoint                                               |
+|`UM_FILESYSTEM`  | filesystem type                                          |
+|`UM_MOUNTOPTIONS`| mount options that have been passed to the mount command |
+|`UM_VENDOR`      | vendor of the device (empty if unknown)                  |
+|`UM_MODEL`       | model name of the device (empty if unknown)              |
 
 Likewise, the command `run-parts /etc/usbmount/umount.d` is executed
 after a device or partition has been unmounted. The scripts can make use
@@ -202,9 +202,9 @@ usbmount operates (read: "mounts or unmounts filesystems") based on events
 issued by the Linux kernel/udev. As a consequence, if you happen to unmount a
 filesystem and want to mount it again, you have basically two choices:
 
-1 - unplug and plug the device, which may not be desired, for a number of
+1. unplug and plug the device, which may not be desired, for a number of
     reasons.
-2 - make the kernel/udev generate another event so that usbmount knows that it
+2. make the kernel/udev generate another event so that usbmount knows that it
     has some work to do.
 
 The latter can be accomplished by the use of the command
