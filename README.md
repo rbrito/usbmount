@@ -63,6 +63,33 @@ usbmount, despite its name, can mount drives connected via Firewire
 ports, provided that the kernel has support for it (most distribution
 kernels, including the ones shipped with Debian and Ubuntu do).
 
+## Generic comments about package dependencies
+
+This package depends on a few other packages for installation. These are
+properly declared in the built package and apt-get will install all
+required packages if the package is installed from a remote repository
+but dpkg doesn't install dependencies when the package is installed
+from a local file.
+
+There are a few ways to deal with dependencies when installing files
+directly, ex:
+
+Option 1: let apt-get fix missing dependencies.
+
+    # Try install, will not necessarily complete if you're missing a dependency
+    dpkg -i <package>.deb
+
+    # Will install missing dependencies and finish the install process
+    apt-get install -f
+
+
+Option 2: use a package installer that fetches dependencies even for local packages (ex. gdebi).
+
+    # Only required the first time you do this with any package
+    apt-get install gdebi
+
+    # Actually install the package and it's dependencies
+    gdebi <package>.deb
 
 ## Technical Considerations
 
@@ -218,9 +245,12 @@ mounted after a cold boot.
 
 ## Building the package
 
+In order to build this package, debhelper and build-essential are
+required. The package can be built with the simple commands:
+
 ```
 # Install dependencies
-sudo apt-get update && sudo apt-get install -y debhelper
+sudo apt-get update && sudo apt-get install -y debhelper build-essential
 
 # Build
 sudo dpkg-buildpackage -us -uc -b
