@@ -50,6 +50,7 @@ MOUNTOPTIONS=
 FS_MOUNTOPTIONS=
 VERBOSE=no
 
+BLKID="/sbin/blkid"
 UDEVADM="/bin/udevadm"
 
 if [ -r /etc/usbmount/usbmount.conf ]; then
@@ -62,8 +63,8 @@ if [ "${ENABLED:-1}" -eq 0 ]; then
 	exit 0
 fi
 
-if [ ! -x /sbin/blkid ]; then
-	log err "cannot execute /sbin/blkid"
+if [ ! -x "${BLKID}" ]; then
+	log err "cannot execute '${BLKID}'"
 	exit 1
 fi
 
@@ -98,7 +99,7 @@ if [ "$1" = add ]; then
 	# Grab device information from device and "divide it"
 	#   FIXME: improvement: implement mounting by label (notice that labels
 	#   can contain spaces, which makes things a little bit less comfortable).
-	DEVINFO=$(/sbin/blkid -p $DEVNAME)
+	DEVINFO=$("${BLKID}" -p $DEVNAME)
 	FSTYPE=$(echo "$DEVINFO" | sed 's/.*[[:blank:]]TYPE="\([^"]*\)".*/\1/g; s/[[:blank:]]*//g;')
 	UUID=$(echo "$DEVINFO"   | sed 's/.*[[:blank:]]UUID="\([^"]*\)".*/\1/g; s/[[:blank:]]*//g;')
 	USAGE=$(echo "$DEVINFO"  | sed 's/.*[[:blank:]]USAGE="\([^"]*\)".*/\1/g; s/[[:blank:]]*//g;')
