@@ -52,14 +52,16 @@ VERBOSE=no
 
 BLKID="/sbin/blkid"
 UDEVADM="/bin/udevadm"
+USBMOUNT_CONF="/etc/usbmount/usbmount.conf"
+USBMOUNT_VAR="/var/run/usbmount/"
 
-if [ -r /etc/usbmount/usbmount.conf ]; then
-	. /etc/usbmount/usbmount.conf
+if [ -r "${USBMOUNT_CONF}" ]; then
+	. "${USBMOUNT_CONF}"
 	log debug "loaded usbmount configurations"
 fi
 
 if [ "${ENABLED:-1}" -eq 0 ]; then
-	log info "usbmount is disabled, see /etc/usbmount/usbmount.conf"
+	log info "usbmount is disabled, see ${USBMOUNT_CONF}"
 	exit 0
 fi
 
@@ -75,9 +77,9 @@ fi
 
 # Per Policy 9.3.2, directories under /var/run have to be created
 # after every reboot.
-if [ ! -e /var/run/usbmount ]; then
-	mkdir -p /var/run/usbmount
-	log debug "creating /var/run/usbmount directory"
+if [ ! -e "${USBMOUNT_VAR}" ]; then
+	mkdir -p "${USBMOUNT_VAR}"
+	log debug "creating ${USBMOUNT_VAR} directory"
 fi
 
 umask 022
@@ -86,11 +88,11 @@ umask 022
 if [ "$1" = add ]; then
 
 	# Acquire lock.
-	log debug "trying to acquire lock /var/run/usbmount/.mount.lock"
-	lockfile-create --retry 3 /var/run/usbmount/.mount || \
-		{ log err "cannot acquire lock /var/run/usbmount/.mount.lock"; exit 1; }
-	trap '( lockfile-remove /var/run/usbmount/.mount )' 0
-	log debug "acquired lock /var/run/usbmount/.mount.lock"
+	log debug "trying to acquire lock ${USBMOUNT_VAR}/.mount.lock"
+	lockfile-create --retry 3 "${USBMOUNT_VAR}/.mount" || \
+		{ log err "cannot acquire lock ${USBMOUNT_VAR}/.mount.lock"; exit 1; }
+	trap '( lockfile-remove "${USBMOUNT_VAR}/.mount" )' 0
+	log debug "acquired lock ${USBMOUNT_VAR}/.mount.lock"
 
 	# Query udev for the expected device information (as we are now running in
 	# a service's context and the env variables have been lost)
