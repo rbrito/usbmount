@@ -153,25 +153,25 @@ if [ "${1}" = "add" ]; then
 				# Determine vendor and model.
 				vendor=
 				if [ -r "/sys${DEVPATH}/device/vendor" ]; then
-					vendor="`cat \"/sys"${DEVPATH}"/device/vendor\"`"
+					vendor="$(cat \"/sys"${DEVPATH}"/device/vendor\")"
 				elif [ -r "/sys${DEVPATH}/../device/vendor" ]; then
-					vendor="`cat \"/sys"${DEVPATH}"/../device/vendor\"`"
+					vendor="$(cat \"/sys"${DEVPATH}"/../device/vendor\")"
 				elif [ -r "/sys${DEVPATH}/device/../manufacturer" ]; then
-					vendor="`cat \"/sys"${DEVPATH}"/device/../manufacturer\"`"
+					vendor="$(cat \"/sys"${DEVPATH}"/device/../manufacturer\")"
 				elif [ -r "/sys${DEVPATH}/../device/../manufacturer" ]; then
-					vendor="`cat \"/sys"${DEVPATH}"/../device/../manufacturer\"`"
+					vendor="$(cat \"/sys"${DEVPATH}"/../device/../manufacturer\")"
 				fi
 				vendor="$(echo "${vendor}" | sed 's/^[[:blank:]]\+//; s/[[:blank:]]\+$//')"
 
 				model=
 				if [ -r "/sys${DEVPATH}/device/model" ]; then
-					model="`cat \"/sys"${DEVPATH}"/device/model\"`"
+					model="$(cat \"/sys"${DEVPATH}"/device/model\")"
 				elif [ -r "/sys${DEVPATH}/../device/model" ]; then
-					model="`cat \"/sys"${DEVPATH}"/../device/model\"`"
+					model="$(cat \"/sys"${DEVPATH}"/../device/model\")"
 				elif [ -r "/sys${DEVPATH}/device/../product" ]; then
-					model="`cat \"/sys"${DEVPATH}"/device/../product\"`"
+					model="$(cat \"/sys"${DEVPATH}"/device/../product\")"
 				elif [ -r "/sys${DEVPATH}/../device/../product" ]; then
-					model="`cat \"/sys"${DEVPATH}"/../device/../product\"`"
+					model="$(cat \"/sys"${DEVPATH}"/../device/../product\")"
 				fi
 				model="$(echo "${model}" | sed 's/^[[:blank:]]\+//; s/[[:blank:]]\+$//')"
 
