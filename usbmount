@@ -103,7 +103,7 @@ if [ "${1}" = "add" ]; then
 	#   can contain spaces, which makes things a little bit less comfortable).
 	eval "$("${BLKID}" -o value -p -s TYPE -s USAGE -s UUID "${DEVNAME}")"
 
-	if ! echo "${USAGE}" | egrep -q "(filesystem|disklabel)"; then
+	if [ "${USAGE}" != "filesystem" ] && [ "${USAGE}" != "disklabel" ]; then
 		log info "${DEVNAME} does not contain a filesystem or disklabel"
 		exit 0
 	fi
