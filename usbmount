@@ -93,7 +93,7 @@ if [ "$1" = add ]; then
 
 	# Query udev for the expected device information (as we are now running in
 	# a service's context and the env variables have been lost)
-	eval $("${UDEVADM}" info --query=env --export "$DEVNAME" | grep -v '^[^=]*\..*=')
+	eval $("${UDEVADM}" info --query=env --export "$DEVNAME")
 
 	# Grab device information from device and "divide it"
 	#   FIXME: improvement: implement mounting by label (notice that labels
