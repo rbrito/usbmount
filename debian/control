@@ -12,7 +12,9 @@ Homepage: http://github.com/rbrito/usbmount
 Package: usbmount
 Architecture: all
 Depends:
+ util-linux,
  lockfile-progs,
+ systemd,
  udev,
  ${misc:Depends}
 Recommends:
