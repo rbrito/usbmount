@@ -112,7 +112,7 @@ if [ "${1}" = "add" ]; then
 	if grep -q -E "^[[:blank:]]*${DEVNAME}" "/etc/fstab"; then
 		log info "executing command: mount ${DEVNAME}"
 		mount "${DEVNAME}" || log err "mount by DEVNAME with ${DEVNAME} wasn't successful; return code ${?}"
-	elif grep -q "^[[:blank:]]*UUID=\"?${UUID}\"?" "/etc/fstab"; then
+	elif grep -q -E "^[[:blank:]]*UUID=\"?${UUID}\"?" "/etc/fstab"; then
 		log info "executing command: mount -U ${UUID}"
 		mount -U "${UUID}" || log err "mount by UUID with ${UUID} wasn't successful; return code ${?}"
 	else
