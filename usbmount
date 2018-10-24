@@ -56,6 +56,7 @@ USBMOUNT_CONF="/etc/usbmount/usbmount.conf"
 USBMOUNT_VAR="/var/run/usbmount/"
 
 if [ -r "${USBMOUNT_CONF}" ]; then
+	# shellcheck source=usbmount.conf
 	. "${USBMOUNT_CONF}"
 	log debug "loaded usbmount configurations"
 fi
