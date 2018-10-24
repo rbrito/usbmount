@@ -192,7 +192,7 @@ elif [ "${1}" = "remove" ]; then
 
 	# A block or partition device has been removed.
 	# Test if it is mounted.
-	while read -r device mountpoint fstype remainder; do
+	while read -r device mountpoint fstype _; do
 		if [ "${DEVNAME}" = "${device}" ]; then
 			# If the mountpoint and filesystem type are maintained by
 			# this script, unmount the filesystem.
