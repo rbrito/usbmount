@@ -98,13 +98,10 @@ if [ "${1}" = "add" ]; then
 	# a service's context and the env variables have been lost)
 	eval $("${UDEVADM}" info --query=env --export "${DEVNAME}")
 
-	# Grab device information from device and "divide it"
+	# Grab device information from device
 	#   FIXME: improvement: implement mounting by label (notice that labels
 	#   can contain spaces, which makes things a little bit less comfortable).
-	DEVINFO="$("${BLKID}" -p "${DEVNAME}")"
-	FSTYPE="$(echo "${DEVINFO}" | sed 's/.*[[:blank:]]TYPE="\([^"]*\)".*/\1/g; s/[[:blank:]]*//g;')"
-	UUID="$(echo "${DEVINFO}"   | sed 's/.*[[:blank:]]UUID="\([^"]*\)".*/\1/g; s/[[:blank:]]*//g;')"
-	USAGE="$(echo "${DEVINFO}"  | sed 's/.*[[:blank:]]USAGE="\([^"]*\)".*/\1/g; s/[[:blank:]]*//g;')"
+	eval "$("${BLKID}" -o value -p -s TYPE -s USAGE -s UUID "${DEVNAME}")"
 
 	if ! echo "${USAGE}" | egrep -q "(filesystem|disklabel)"; then
 		log info "${DEVNAME} does not contain a filesystem or disklabel"
@@ -119,9 +116,9 @@ if [ "${1}" = "add" ]; then
 		log info "executing command: mount -U ${UUID}"
 		mount -U "${UUID}" || log err "mount by UUID with ${UUID} wasn't successful; return code ${?}"
 	else
-		log debug "${DEVNAME} contains filesystem type ${FSTYPE}"
+		log debug "${DEVNAME} contains filesystem type ${TYPE}"
 
-		fstype="${FSTYPE}"
+		fstype="${TYPE}"
 		# Test if the filesystem type is in the list of filesystem
 		# types to mount.
 		if in_list "${fstype}" "${FILESYSTEMS}"; then
