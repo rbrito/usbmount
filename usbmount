@@ -50,6 +50,8 @@ MOUNTOPTIONS=
 FS_MOUNTOPTIONS=
 VERBOSE=no
 
+UDEVADM="/bin/udevadm"
+
 if [ -r /etc/usbmount/usbmount.conf ]; then
 	. /etc/usbmount/usbmount.conf
 	log debug "loaded usbmount configurations"
@@ -62,6 +64,11 @@ fi
 
 if [ ! -x /sbin/blkid ]; then
 	log err "cannot execute /sbin/blkid"
+	exit 1
+fi
+
+if [ ! -x "${UDEVADM}" ]; then
+	log err "cannot execute '${UDEVADM}'"
 	exit 1
 fi
 
@@ -86,7 +93,7 @@ if [ "$1" = add ]; then
 
 	# Query udev for the expected device information (as we are now running in
 	# a service's context and the env variables have been lost)
-	eval $(udevadm info --query=env --export "$DEVNAME" | grep -v '^[^=]*\..*=')
+	eval $("${UDEVADM}" info --query=env --export "$DEVNAME" | grep -v '^[^=]*\..*=')
 
 	# Grab device information from device and "divide it"
 	#   FIXME: improvement: implement mounting by label (notice that labels
