@@ -13,6 +13,7 @@ Package: usbmount
 Architecture: all
 Depends:
  lockfile-progs,
+ systemd,
  udev,
  ${misc:Depends}
 Recommends:
