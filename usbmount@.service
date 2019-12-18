@@ -1,6 +1,7 @@
 [Unit]
 BindsTo=%i.device
 After=%i.device
+Before=docker.service
 
 [Service]
 Type=oneshot

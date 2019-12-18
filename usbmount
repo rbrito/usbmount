@@ -79,7 +79,7 @@ if [ "$1" = add ]; then
 
     # Acquire lock.
     log debug "trying to acquire lock /var/run/usbmount/.mount.lock"
-    lockfile-create --retry 3 /var/run/usbmount/.mount || \
+    lockfile-create --retry 8 /var/run/usbmount/.mount || \
 	{ log err "cannot acquire lock /var/run/usbmount/.mount.lock"; exit 1; }
     trap '( lockfile-remove /var/run/usbmount/.mount )' 0
     log debug "acquired lock /var/run/usbmount/.mount.lock"
@@ -94,6 +94,7 @@ if [ "$1" = add ]; then
     DEVINFO=$(/sbin/blkid -p $DEVNAME)
     FSTYPE=$(echo "$DEVINFO" | sed 's/.*[[:blank:]]TYPE="\([^"]*\)".*/\1/g; s/[[:blank:]]*//g;')
     UUID=$(echo "$DEVINFO"   | sed 's/.*[[:blank:]]UUID="\([^"]*\)".*/\1/g; s/[[:blank:]]*//g;')
+    SHORT_UUID=$(echo "$DEVINFO" | sed 's/.*[[:blank:]]UUID="\([^"]*\)".*/\1/g; s/[[:blank:]]*//g;' | cut -d "-" -f1)
     USAGE=$(echo "$DEVINFO"  | sed 's/.*[[:blank:]]USAGE="\([^"]*\)".*/\1/g; s/[[:blank:]]*//g;')
 
     if ! echo $USAGE | egrep -q "(filesystem|disklabel)"; then
@@ -174,6 +175,7 @@ if [ "$1" = add ]; then
 		export UM_MOUNTOPTIONS="$options"
 		export UM_VENDOR="$vendor"
 		export UM_MODEL="$model"
+		export UM_SUUID="$SHORT_UUID"
 		log info "executing command: run-parts /etc/usbmount/mount.d"
 		run-parts /etc/usbmount/mount.d || :
 	    else

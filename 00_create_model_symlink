@@ -29,9 +29,16 @@ else
 fi
 
 # Append partition number, if any, to the symlink name.
-partition=`echo "$UM_DEVICE" | sed 's/^.*[^0123456789]\([0123456789]*\)/\1/'`
-if test -n "$partition"; then
-    name="${name}_$partition"
+# partition=`echo "$UM_DEVICE" | sed 's/^.*[^0123456789]\([0123456789]*\)/\1/'`
+# if test -n "$partition"; then
+#     name="${name}_$partition"
+# fi
+
+# Append part of the UUID instead of partition number to have a deterministic link
+# Same model and vendor can cause name collision on restarts.
+
+if test -n "$UM_SUUID"; then
+    name="${name}_$UM_SUUID"
 fi
 
 # If the symlink does not yet exist, create it.

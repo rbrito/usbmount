@@ -1,3 +1,9 @@
+usbmount (0.0.200) unstable; urgency=low
+
+  * Modify symlink creation adding part of UUID
+
+ -- Abel Boldú <vdo@dappnode.io>  Wed 18 Dec 2019 10:12:19 AM CET
+
 usbmount (0.0.24) unstable; urgency=medium
 
   * Use systemd to manage [dis]mounting (based on https://bugs.debian.org/cgi-bin/bugreport.cgi?bug=774149#177)
