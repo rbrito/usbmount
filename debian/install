@@ -1,5 +1,6 @@
 00_create_model_symlink etc/usbmount/mount.d
-00_remove_model_symlink etc/usbmount/umount.d
+10_create_label_symlink etc/usbmount/mount.d
+00_remove_symlinks etc/usbmount/umount.d
 usbmount usr/share/usbmount
 usbmount.conf etc/usbmount
 90-usbmount.rules lib/udev/rules.d
