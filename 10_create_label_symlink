@@ -1,0 +1,28 @@
+#!/bin/sh
+# This script creates the model name symlink in /var/run/usbmount.
+# Copyright (C) 2005 Martin Dickopp
+#
+# This file is free software; the copyright holder gives unlimited
+# permission to copy and/or distribute it, with or without
+# modifications, as long as this notice is preserved.
+#
+# This file is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY, to the extent permitted by law; without
+# even the implied warranty of MERCHANTABILITY or FITNESS FOR A
+# PARTICULAR PURPOSE.
+#
+set -e
+
+# Get label or exit if no label
+LABEL=`e2label $UM_DEVICE` || exit 0
+
+# Replace spaces with underscores, remove special characters in label
+LABEL=`echo "$LABEL" | sed 's/ /_/g; s/[^0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ._-]//g'`
+
+# Exit if label is empty.
+test -n "$LABEL" || exit 0
+
+# If the symlink does not yet exist, create it.
+test -e "/var/run/usbmount/$LABEL" || ln -sf "$UM_MOUNTPOINT" "/var/run/usbmount/$LABEL"
+
+exit 0

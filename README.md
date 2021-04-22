@@ -8,7 +8,13 @@ in, the first available mountpoint is automatically selected.
 
 If the device plugged provides a model name, a symbolic link at
 `/var/run/usbmount/MODELNAME` pointing to the mountpoint is automatically
-created.  When the device is not present anymore in the system (e.g.,
+created.
+
+If the device plugged has a label (e2label), a symbolic link at
+`/var/run/usbmount/LABEL` pointing to the mountpoint is automatically
+created.
+
+When the device is not present anymore in the system (e.g.,
 after it has been unplugged), usbmount deletes the symbolic links that
 were created.
 

@@ -16,7 +16,6 @@ set -e
 ls /var/run/usbmount | while read name; do
     if test "`readlink \"/var/run/usbmount/$name\" || :`" = "$UM_MOUNTPOINT"; then
 	rm -f "/var/run/usbmount/$name"
-	break
     fi
 done
 
