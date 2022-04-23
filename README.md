@@ -243,6 +243,14 @@ command is likely needed to be run with superuser privileges.
 Triggering kernel events is also a way to get a particular filesystem
 mounted after a cold boot.
 
+## Logging
+
+To view logs for all `usbmount` services run the following:
+
+```
+$ journalctl -u 'usbmount*' -f
+```
+
 ## Building the package
 
 In order to build this package, debhelper and build-essential are
